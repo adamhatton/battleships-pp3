@@ -1,6 +1,5 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
+import sys
+
 print(
     '''
   ____       _______ _______ _      ______    _____ _    _ _____ _____   _____ 
@@ -16,8 +15,33 @@ def welcome_message():
     '''
     Prints welcome message to user, asks if they want to play a game and
     collects user input
-    '''
-    print('Would you like to play a game?\n')
-    print('[y] = yes, [n] = no')
+    '''  
+    while True:
+        print('Would you like to play a game?\n')
+        print('[y] = yes, [n] = no\n')
 
-welcome_message()
+        answer = input('\n')
+
+        if validate_input(answer):
+            print('yay')
+            break
+
+    return answer
+
+
+def validate_input(input):
+    try:
+        input.lower()
+    
+    except AttributeError:
+        print('Invalid input, please try again')
+        return False
+    
+    return True
+
+
+
+def main():
+    welcome_message()
+
+main()
