@@ -115,7 +115,9 @@ class Gameboard:
     ship placement and player/computer guesses 
     '''
     def __init__(self, owner):
-        self.board = self.generate_blank_board()
+        self.rows = 6
+        self.cols = 6
+        self.board_contents = self.generate_blank_board()
         self.owner = owner
         self.ships = {'ship1': [], 'ship2': [], 'ship3': []}
 
@@ -125,11 +127,25 @@ class Gameboard:
         each containing 6 values
         '''
         board_grid = {}
-        for row in range(6):
-            for col in range(6):
-                board_grid.update({f'{row},{col}':'~'})
+        for row in range(self.rows):
+            for col in range(self.cols):
+                board_grid.update({f'{row},{col}': '~'})
     
         return board_grid
+
+    def print_board(self):
+
+        # Adds border to top
+        print(' -' * 12)
+
+        for row in range(self.rows):
+            row_to_print = ''
+            for col in range(self.cols):
+                row_to_print = row_to_print + self.board_contents[f'{row},{col}'] + ' | '
+            print('| ' + row_to_print)
+
+        # Adds border to bottom
+        print(' -' * 12)
 
 
 def main():
@@ -141,7 +157,8 @@ def main():
     player_name = get_player_name()
     show_instructions()
     player_board = Gameboard(player_name)
-    print(player_board.board)
+    print(player_board.board_contents)
+    player_board.print_board()
     #setup_boards(player_name)
     print('code got back to main()')
 
