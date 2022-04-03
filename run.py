@@ -25,8 +25,11 @@ def welcome_message():
 
         if validate_input(player_answer):
             break
-
-    return player_answer
+    
+    if player_answer == 'y':
+        return True
+    else:
+        return False
 
 
 def validate_input(input):
@@ -44,8 +47,18 @@ def validate_input(input):
     return True
 
 
+def play_or_quit(answer):
+    if answer:
+        pass
+    else:
+        print(
+            '''Closing game. If you change your mind, press the 'Run Program'
+button above to restart the game''')
+        sys.exit()
+
+
 def main():
-    welcome_message()
-    print('code got to main()')
+    player_response = welcome_message()
+    play_or_quit(player_response)
 
 main()
