@@ -161,8 +161,11 @@ class Gameboard:
 
     def place_ships(self):
         for ship in self.ships:
-            #while True:
-                #print('Where')
+            while True:
+                print(f'Where would you like to place {ship}?')
+                print('Enter the starting co-ordinate followed by V for vertical placement or H for horizontal placement, e.g. A2H or C4V')
+                ship_placement = input().lower()
+                # validate_input(ship_placement, )
             print(ship)
 
 def main():
