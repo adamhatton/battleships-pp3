@@ -16,7 +16,7 @@ def welcome_message():
     '''
     Prints welcome message to user, asks if they want to play a game and
     collects user input
-    '''  
+    '''
     while True:
         print('Would you like to play a game?')
         print('[y] = yes, [n] = no')
@@ -25,19 +25,19 @@ def welcome_message():
 
         if validate_input(player_answer):
             break
-    
+
     if player_answer == 'y':
         return True
     else:
         return False
 
 
-def validate_input(input):
+def validate_input(user_input):
     '''
     Validates user input and returns True if it is valid or False if it is not
     '''
     try:
-        if input == 'y' or input == 'n':
+        if user_input == 'y' or user_input == 'n':
             return True
         else:
             raise Exception
@@ -81,6 +81,9 @@ def get_player_name():
 
 
 def show_instructions():
+    '''
+    Asks user if they want to see the rules and responds based on user input
+    '''
     while True:
         print('Would you like to see the rules?')
         print('[y] = yes, [n] = no')
@@ -112,14 +115,16 @@ M = A shot which missed''')
 class Gameboard:
     '''
     Creates an instance of the Gameboard class which manages the board appearance,
-    ship placement and player/computer guesses 
+    ship placement and player/computer guesses
     '''
     def __init__(self, owner):
         self.rows = 6
         self.cols = 6
+        self.row_coordinates_key = ['A', 'B', 'C', 'D', 'E', 'F']
         self.board_contents = self.generate_blank_board()
         self.owner = owner
         self.ships = {'ship1': [], 'ship2': [], 'ship3': []}
+
 
     def generate_blank_board(self):
         '''
@@ -127,25 +132,32 @@ class Gameboard:
         each containing 6 values
         '''
         board_grid = {}
+
         for row in range(self.rows):
             for col in range(self.cols):
-                board_grid.update({f'{row},{col}': '~'})
-    
+                board_grid.update({f'{self.row_coordinates_key[row]},{col}': '~'})
+
         return board_grid
 
     def print_board(self):
+        '''
+        Prints the board contents to the terminal in a grid format
+        '''
+        # Add column numbers across top of board
+        print('   1   2   3   4   5   6')
 
         # Adds border to top
-        print(' -' * 12)
+        print(' -' * 13)
 
+        # Prints each row starting with the row letter
         for row in range(self.rows):
-            row_to_print = ''
+            row_to_print = f'{self.row_coordinates_key[row]}' + '| '
             for col in range(self.cols):
-                row_to_print = row_to_print + self.board_contents[f'{row},{col}'] + ' | '
-            print('| ' + row_to_print)
+                row_to_print += self.board_contents[f'{self.row_coordinates_key[row]},{col}'] + ' | '
+            print(row_to_print)
 
         # Adds border to bottom
-        print(' -' * 12)
+        print(' -' * 13)
 
 
 def main():
