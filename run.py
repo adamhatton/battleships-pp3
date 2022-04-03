@@ -64,6 +64,7 @@ button above to restart the game''')
 def get_player_name():
     '''
     Get and return user's name, defaulting to 'Player1' if nothing is entered.
+    Function will validate to ensure name is no longer than 40 chars
     '''
     while True:
         try:
@@ -78,7 +79,35 @@ def get_player_name():
         except Exception:
             print('There was an error with your name, please try again')
 
-    
+
+def show_instructions():
+    while True:
+        print('Would you like to see the rules?')
+        print('[y] = yes, [n] = no')
+
+        player_answer = input('\n').lower()
+
+        if validate_input(player_answer):
+            break
+
+    if player_answer == 'n':
+        return
+    else:
+        print('''This version of battleships is played on a 6x6 board.
+You will be given three ships of differing lengths to place on your board,
+and your opponenet will do the same with their board. The objective is to sink
+your opponent's ships by supplying the co-ordinates of where you think they
+have placed their ships. The first player to sink all the opponent's ships
+is the winner.
+
+To keep track of your shots, you will be provided with a 'guess' board.
+The symbols on the board are as follows:
+~ = An untouched section of a board
++ = An undamaged section of a ship
+@ = A section of a ship which has been hit
+M = A shot which missed''')
+        return
+
 
 def main():
     '''
@@ -87,7 +116,7 @@ def main():
     player_response = welcome_message()
     play_or_quit(player_response)
     player_name = get_player_name()
-    print(player_name)
+    show_instructions()
     print('code got back to main()')
 
 main()
