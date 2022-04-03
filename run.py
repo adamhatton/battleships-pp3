@@ -144,7 +144,7 @@ class Gameboard:
         Prints the board contents to the terminal in a grid format
         '''
         # Add column numbers across top of board
-        print('   1   2   3   4   5   6')
+        print('   0   1   2   3   4   5')
 
         # Adds border to top
         print(' -' * 13)
@@ -165,8 +165,36 @@ class Gameboard:
                 print(f'Where would you like to place {ship}?')
                 print('Enter the starting co-ordinate followed by V for vertical placement or H for horizontal placement, e.g. A2H or C4V')
                 ship_placement = input().lower()
-                # validate_input(ship_placement, )
+                if validate_ship_input(ship_placement):
+                    break
             print(ship)
+
+def validate_ship_input(user_input):
+    valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
+    valid_col_inputs = ('0', '1', '2', '3', '4', '5')
+    valid_orientation = ('h', 'v')
+
+    try:
+        if len(user_input) < 3:
+            print('Input too short, please try again')
+            return False
+        elif len(user_input) > 3:
+            print('Input too long, please try again')
+            return False
+        elif user_input[0] not in valid_row_inputs:
+            print('Invalid co-ordinates entered, please use only A-E and 0-5')
+            return False
+        elif user_input[1] not in valid_col_inputs:
+            print('Invalid co-ordinates entered, please use only A-E and 0-5')
+            return False
+        elif user_input[2] not in valid_orientation:
+            print('Invalid orientation entered, please use H or V')
+            return False
+        else:
+            return True
+    except Exception:
+        print('Unknown error with your input, please try again')
+        return False
 
 def main():
     '''
