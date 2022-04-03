@@ -47,9 +47,13 @@ def validate_input(input):
     return True
 
 
-def play_or_quit(answer):
-    if answer:
-        pass
+def play_or_quit(play_game):
+    '''
+    Determines if user wants to play. If they don't, a goodbye message is
+    printed. If they do, function returns to main()
+    '''
+    if play_game:
+        return
     else:
         print(
             '''Closing game. If you change your mind, press the 'Run Program'
@@ -57,8 +61,33 @@ button above to restart the game''')
         sys.exit()
 
 
+def get_player_name():
+    '''
+    Get and return user's name, defaulting to 'Player1' if nothing is entered.
+    '''
+    while True:
+        try:
+            player_name = input('Please enter your name (leave blank to use "Player1"): \n')
+            if player_name == '':
+                return 'Player1'
+            elif len(player_name) > 40:
+                print("My memory isn't that good, please choose something shorter")
+                continue
+            else:
+                return player_name
+        except Exception:
+            print('There was an error with your name, please try again')
+
+    
+
 def main():
+    '''
+    Runs all the functions for the game
+    '''
     player_response = welcome_message()
     play_or_quit(player_response)
+    player_name = get_player_name()
+    print(player_name)
+    print('code got back to main()')
 
 main()
