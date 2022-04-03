@@ -94,7 +94,7 @@ def show_instructions():
         return
     else:
         print('''This version of battleships is played on a 6x6 board.
-You will be given three ships of differing lengths to place on your board,
+You will be given three ships of the same length to place on your board,
 and your opponenet will do the same with their board. The objective is to sink
 your opponent's ships by supplying the co-ordinates of where you think they
 have placed their ships. The first player to sink all the opponent's ships
@@ -109,6 +109,29 @@ M = A shot which missed''')
         return
 
 
+class Gameboard:
+    '''
+    Creates an instance of the Gameboard class which manages the board appearance,
+    ship placement and player/computer guesses 
+    '''
+    def __init__(self, owner):
+        self.board = self.generate_blank_board()
+        self.owner = owner
+        self.ships = {'ship1': [], 'ship2': [], 'ship3': []}
+
+    def generate_blank_board(self):
+        '''
+        Generates a dictionary representing the board, with 6 rows
+        each containing 6 values
+        '''
+        board_grid = {}
+        for row in range(6):
+            for col in range(6):
+                board_grid.update({f'{row},{col}':'~'})
+    
+        return board_grid
+
+
 def main():
     '''
     Runs all the functions for the game
@@ -117,6 +140,9 @@ def main():
     play_or_quit(player_response)
     player_name = get_player_name()
     show_instructions()
+    player_board = Gameboard(player_name)
+    print(player_board.board)
+    #setup_boards(player_name)
     print('code got back to main()')
 
 main()
