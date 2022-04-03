@@ -120,10 +120,10 @@ class Gameboard:
     def __init__(self, owner):
         self.rows = 6
         self.cols = 6
-        self.row_coordinates_key = ['A', 'B', 'C', 'D', 'E', 'F']
+        self.row_coordinates_key = ('A', 'B', 'C', 'D', 'E', 'F')
         self.board_contents = self.generate_blank_board()
         self.owner = owner
-        self.ships = {'ship1': [], 'ship2': [], 'ship3': []}
+        self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
 
 
     def generate_blank_board(self):
@@ -159,6 +159,11 @@ class Gameboard:
         # Adds border to bottom
         print(' -' * 13)
 
+    def place_ships(self):
+        for ship in self.ships:
+            #while True:
+                #print('Where')
+            print(ship)
 
 def main():
     '''
@@ -169,9 +174,10 @@ def main():
     player_name = get_player_name()
     show_instructions()
     player_board = Gameboard(player_name)
-    print(player_board.board_contents)
+    comp_board = Gameboard('Computer')
     player_board.print_board()
-    #setup_boards(player_name)
+    comp_board.print_board()
+    player_board.place_ships()
     print('code got back to main()')
 
 main()
