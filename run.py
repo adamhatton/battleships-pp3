@@ -117,10 +117,15 @@ class Gameboard:
     Creates an instance of the Gameboard class which manages the board appearance,
     ship placement and player/computer guesses
     '''
+    wave = '~'
+    ship_section = '+'
+    damaged_ship_section = '@'
+    missed_shot = 'M'
+
     def __init__(self, owner):
         self.rows = 6
         self.cols = 6
-        self.row_coordinates_key = ('A', 'B', 'C', 'D', 'E', 'F')
+        self.row_coordinates_key = ('a', 'b', 'c', 'd', 'e', 'f')
         self.board_contents = self.generate_blank_board()
         self.owner = owner
         self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
@@ -135,7 +140,7 @@ class Gameboard:
 
         for row in range(self.rows):
             for col in range(self.cols):
-                board_grid.update({f'{self.row_coordinates_key[row]},{col}': '~'})
+                board_grid.update({f'{self.row_coordinates_key[row]}{col}': Gameboard.wave})
 
         return board_grid
 
@@ -153,7 +158,7 @@ class Gameboard:
         for row in range(self.rows):
             row_to_print = f'{self.row_coordinates_key[row]}' + '| '
             for col in range(self.cols):
-                row_to_print += self.board_contents[f'{self.row_coordinates_key[row]},{col}'] + ' | '
+                row_to_print += self.board_contents[f'{self.row_coordinates_key[row]}{col}'] + ' | '
             print(row_to_print)
 
         # Adds border to bottom
@@ -163,11 +168,42 @@ class Gameboard:
         for ship in self.ships:
             while True:
                 print(f'Where would you like to place {ship}?')
-                print('Enter the starting co-ordinate followed by V for vertical placement or H for horizontal placement, e.g. A2H or C4V')
+                print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                 ship_placement = input().lower()
                 if validate_ship_input(ship_placement):
-                    break
+                    if self.check_ship_placement(ship_placement):
+                        break
             print(ship)
+
+    def check_ship_placement(self, ship_placement):
+        ship_row = ship_placement[0]
+        # Convert ship column to int to allow iteration through each section
+        ship_col = int(ship_placement[1])
+        ship_orientation = ship_placement[2]
+        active_board = self.board_contents
+
+        active_board['a2'] = '+'
+        active_board['c3'] = '+'
+        active_board['d4'] = '+'
+
+        # If user has selected horizontal placement, checks to make sure space is available on board
+        if ship_orientation == 'h':
+            # Ships are 4 sections long
+            for ship_section in range(4):
+                ship_col += ship_section
+                active_pos_key = f'{ship_row}{ship_col}'
+                #TODO FIX INCREASE OF SHIP_COL
+                active_pos_contents = active_board[active_pos_key]
+                print(active_pos_key)
+                print(active_pos_contents)
+                if active_pos_contents != Gameboard.wave:
+                    print("There is already a ship here, please provide a different location")
+                    return False
+                if active_pos_key not in active_board:
+                    print("Not enough space for this ship, please provide a different location")
+                    return False
+            return True
+
 
 def validate_ship_input(user_input):
     valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
@@ -193,7 +229,7 @@ def validate_ship_input(user_input):
         else:
             return True
     except Exception:
-        print('Unknown error with your input, please try again')
+        print('There was an error with your input, please try again')
         return False
 
 def main():
