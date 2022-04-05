@@ -121,11 +121,11 @@ class Gameboard:
     ship_section = '+'
     damaged_ship_section = '@'
     missed_shot = 'M'
+    row_coordinates_key = ('a', 'b', 'c', 'd', 'e', 'f')
 
     def __init__(self, owner):
         self.rows = 6
         self.cols = 6
-        self.row_coordinates_key = ('a', 'b', 'c', 'd', 'e', 'f')
         self.board_contents = self.generate_blank_board()
         self.owner = owner
         self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
@@ -140,7 +140,7 @@ class Gameboard:
 
         for row in range(self.rows):
             for col in range(self.cols):
-                board_grid.update({f'{self.row_coordinates_key[row]}{col}': Gameboard.wave})
+                board_grid.update({f'{Gameboard.row_coordinates_key[row]}{col}': Gameboard.wave})
 
         return board_grid
 
@@ -156,9 +156,9 @@ class Gameboard:
 
         # Prints each row starting with the row letter
         for row in range(self.rows):
-            row_to_print = f'{self.row_coordinates_key[row]}' + '| '
+            row_to_print = f'{Gameboard.row_coordinates_key[row]}' + '| '
             for col in range(self.cols):
-                row_to_print += self.board_contents[f'{self.row_coordinates_key[row]}{col}'] + ' | '
+                row_to_print += self.board_contents[f'{Gameboard.row_coordinates_key[row]}{col}'] + ' | '
             print(row_to_print)
 
         # Adds border to bottom
@@ -176,13 +176,27 @@ class Gameboard:
             print(ship)
 
     def check_ship_placement(self, ship_placement):
+        '''
+        Takes the co-ordinates as input by the user and splits it into a row,
+        column and orientation. Takes the row and column to determine a starting
+        position then cycles through each section of the ship (4) to checks that
+        the co-ordiantes exist and that they don't contain another ship, using 
+        the orienation to determine which co-ordinates to check.
+        '''
         ship_row = ship_placement[0]
+        # ship_row is a letter, find the index of that letter in the row_coordinates key
+        # so letter can be increased in loops
+        row_letter_index = Gameboard.row_coordinates_key.index(ship_row)
         # Convert ship column to int to allow iteration through each ship section
         ship_col = int(ship_placement[1])
         ship_orientation = ship_placement[2]
         active_board = self.board_contents
 
-        # If user has selected horizontal placement, checks to make sure space is available on board
+        active_board['a2'] = '+'
+        active_board['b3'] = '+'
+        active_board['c4'] = '+'
+
+        # Checks available space is user has selected horizontal
         if ship_orientation == 'h':
             # Ships are 4 sections long
             for ship_section in range(4):
@@ -204,6 +218,32 @@ class Gameboard:
                 # Increase ship_col by one so next ship_section is checked
                 ship_col += 1
             return True
+
+        # Checks available space is user has selected vertical
+        if ship_orientation == 'v':
+            # Ships are 4 sections long
+            for ship_section in range(4):
+                active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}'
+                print(row_letter_index)
+                print(active_pos_key)
+
+                # Check if co-ordinates for the ship section exist on the board
+                if active_pos_key not in active_board:
+                    print("Not enough space for this ship, please provide a different location")
+                    return False
+
+                # Get the contents of the board space where the ship_section is to be placed
+                active_pos_contents = active_board[active_pos_key]
+
+                # Check to make sure contents of the space are a 'wave'
+                if active_pos_contents != Gameboard.wave:
+                    print("There is another ship in the way, please provide a different location")
+                    return False
+                
+                # Increase ship_col by one so next ship_section is checked
+                row_letter_index += 1
+            return True
+
 
 
 def validate_ship_input(user_input):
