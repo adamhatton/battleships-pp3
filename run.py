@@ -177,31 +177,32 @@ class Gameboard:
 
     def check_ship_placement(self, ship_placement):
         ship_row = ship_placement[0]
-        # Convert ship column to int to allow iteration through each section
+        # Convert ship column to int to allow iteration through each ship section
         ship_col = int(ship_placement[1])
         ship_orientation = ship_placement[2]
         active_board = self.board_contents
-
-        active_board['a2'] = '+'
-        active_board['c3'] = '+'
-        active_board['d4'] = '+'
 
         # If user has selected horizontal placement, checks to make sure space is available on board
         if ship_orientation == 'h':
             # Ships are 4 sections long
             for ship_section in range(4):
-                ship_col += ship_section
                 active_pos_key = f'{ship_row}{ship_col}'
-                #TODO FIX INCREASE OF SHIP_COL
-                active_pos_contents = active_board[active_pos_key]
-                print(active_pos_key)
-                print(active_pos_contents)
-                if active_pos_contents != Gameboard.wave:
-                    print("There is already a ship here, please provide a different location")
-                    return False
+
+                # Check if co-ordinates for the ship section exist on the board
                 if active_pos_key not in active_board:
                     print("Not enough space for this ship, please provide a different location")
                     return False
+
+                # Get the contents of the board space where the ship_section is to be placed
+                active_pos_contents = active_board[active_pos_key]
+
+                # Check to make sure contents of the space are a 'wave'
+                if active_pos_contents != Gameboard.wave:
+                    print("There is another ship in the way, please provide a different location")
+                    return False
+                
+                # Increase ship_col by one so next ship_section is checked
+                ship_col += 1
             return True
 
 
