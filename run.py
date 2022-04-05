@@ -1,4 +1,5 @@
 import sys
+import random
 
 # print(
 #     '''
@@ -165,16 +166,18 @@ class Gameboard:
         print(' -' * 13)
 
     def create_ships(self, player):
+        #TODO FIX ERROR WITH COMPUTER GENERATING SHIPS
         if player == 'comp':
             for ship in self.ships:
                 while True:
-                    ship_placement = input().lower()
+                    ship_placement = self.generate_comp_input()
                     if validate_ship_input(ship_placement):
-                        valid_placement, ship_coordinates = self.check_ship_placement(ship_placement)
+                        valid_placement, ship_coordinates, error_message = self.check_ship_placement(ship_placement)
                         if valid_placement:
                             self.ships[ship] = ship_coordinates
                             self.add_ship_to_board(self.ships[ship])
                             break
+                self.print_board()
 
         else:
             for ship in self.ships:
@@ -267,6 +270,15 @@ class Gameboard:
         for section in ship:
             self.board_contents[section] = '+'
 
+    def generate_comp_input(self):
+        row_letter = random.choice(Gameboard.row_coordinates_key)
+        col_number = random.randint(0, 5)
+        orientation = random.choice(('h','v'))
+        comp_input = f'{row_letter}{col_number}{orientation}'
+        return comp_input
+
+
+
 
 
 def validate_ship_input(user_input):
@@ -314,6 +326,13 @@ def main():
     comp_board.print_board()
     player_board.create_ships(player_name)
     comp_board.create_ships('comp')
+    comp_board.generate_blank_board()
+    # comp_board.create_ships('comp')
+    # comp_board.generate_blank_board()
+    # comp_board.create_ships('comp')
+    # comp_board.generate_blank_board()
+    # comp_board.create_ships('comp')
+    # comp_board.generate_blank_board()
     print('code got back to main()')
 
 main()
