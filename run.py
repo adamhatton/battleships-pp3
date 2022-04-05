@@ -164,7 +164,7 @@ class Gameboard:
         # Adds border to bottom
         print(' -' * 13)
 
-    def place_ships(self):
+    def create_ships(self):
         for ship in self.ships:
             while True:
                 print(f'Where would you like to place {ship}?')
@@ -173,9 +173,11 @@ class Gameboard:
                 if validate_ship_input(ship_placement):
                     valid_placement, ship_coordinates = self.check_ship_placement(ship_placement)
                     if valid_placement:
-                        ship = ship_coordinates
-                        print(ship)
+                        self.ships[ship] = ship_coordinates
+                        self.add_ship_to_board(self.ships[ship])
                         break
+        self.print_board()
+
 
     def check_ship_placement(self, ship_placement):
         '''
@@ -204,7 +206,7 @@ class Gameboard:
                 # Check if co-ordinates for the ship section exist on the board
                 if active_pos_key not in active_board:
                     print("Not enough space for this ship, please provide a different location")
-                    return False
+                    return False, h_coordinates_list
 
                 # Get the contents of the board space where the ship_section is to be placed
                 active_pos_contents = active_board[active_pos_key]
@@ -212,7 +214,7 @@ class Gameboard:
                 # Check to make sure contents of the space are a 'wave'
                 if active_pos_contents != Gameboard.wave:
                     print("There is another ship in the way, please provide a different location")
-                    return False
+                    return False, h_coordinates_list
                 
                 # Add ship_section to co-ordinates list
                 h_coordinates_list.append(active_pos_key)
@@ -227,13 +229,11 @@ class Gameboard:
             # Ships are 4 sections long
             for ship_section in range(4):
                 active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}'
-                print(row_letter_index)
-                print(active_pos_key)
 
                 # Check if co-ordinates for the ship section exist on the board
                 if active_pos_key not in active_board:
                     print("Not enough space for this ship, please provide a different location")
-                    return False
+                    return False, v_coordinates_list
 
                 # Get the contents of the board space where the ship_section is to be placed
                 active_pos_contents = active_board[active_pos_key]
@@ -241,7 +241,7 @@ class Gameboard:
                 # Check to make sure contents of the space are a 'wave'
                 if active_pos_contents != Gameboard.wave:
                     print("There is another ship in the way, please provide a different location")
-                    return False
+                    return False, v_coordinates_list
                 
                 # Add ship_section to co-ordinates list
                 v_coordinates_list.append(active_pos_key)
@@ -249,6 +249,10 @@ class Gameboard:
                 # Increase ship_col by one so next ship_section is checked
                 row_letter_index += 1
             return True, v_coordinates_list
+    
+    def add_ship_to_board(self, ship):
+        for section in ship:
+            self.board_contents[section] = '+'
 
 
 
@@ -295,7 +299,7 @@ def main():
     comp_board = Gameboard('Computer')
     player_board.print_board()
     comp_board.print_board()
-    player_board.place_ships()
+    player_board.create_ships()
     print('code got back to main()')
 
 main()
