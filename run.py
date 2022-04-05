@@ -171,9 +171,11 @@ class Gameboard:
                 print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                 ship_placement = input().lower()
                 if validate_ship_input(ship_placement):
-                    if self.check_ship_placement(ship_placement):
+                    valid_placement, ship_coordinates = self.check_ship_placement(ship_placement)
+                    if valid_placement:
+                        ship = ship_coordinates
+                        print(ship)
                         break
-            print(ship)
 
     def check_ship_placement(self, ship_placement):
         '''
@@ -192,12 +194,9 @@ class Gameboard:
         ship_orientation = ship_placement[2]
         active_board = self.board_contents
 
-        active_board['a2'] = '+'
-        active_board['b3'] = '+'
-        active_board['c4'] = '+'
-
         # Checks available space is user has selected horizontal
         if ship_orientation == 'h':
+            h_coordinates_list = []
             # Ships are 4 sections long
             for ship_section in range(4):
                 active_pos_key = f'{ship_row}{ship_col}'
@@ -215,12 +214,16 @@ class Gameboard:
                     print("There is another ship in the way, please provide a different location")
                     return False
                 
+                # Add ship_section to co-ordinates list
+                h_coordinates_list.append(active_pos_key)
+
                 # Increase ship_col by one so next ship_section is checked
                 ship_col += 1
-            return True
+            return True, h_coordinates_list
 
         # Checks available space is user has selected vertical
         if ship_orientation == 'v':
+            v_coordinates_list = []
             # Ships are 4 sections long
             for ship_section in range(4):
                 active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}'
@@ -240,13 +243,20 @@ class Gameboard:
                     print("There is another ship in the way, please provide a different location")
                     return False
                 
+                # Add ship_section to co-ordinates list
+                v_coordinates_list.append(active_pos_key)
+
                 # Increase ship_col by one so next ship_section is checked
                 row_letter_index += 1
-            return True
+            return True, v_coordinates_list
 
 
 
 def validate_ship_input(user_input):
+    '''
+    Validates users input for placing a ship to make sure it
+    is the right length and uses only valid characters
+    '''
     valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
     valid_col_inputs = ('0', '1', '2', '3', '4', '5')
     valid_orientation = ('h', 'v')
