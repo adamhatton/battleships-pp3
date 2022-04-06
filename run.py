@@ -244,7 +244,7 @@ class Gameboard:
             v_coordinates_list = []
             # Ships are 4 sections long
             for ship_section in range(4):
-                active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}'
+                active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}' if row_letter_index < 6 else 'blank'
 
                 # Check if co-ordinates for the ship section exist on the board
                 if active_pos_key not in active_board:
@@ -326,13 +326,13 @@ def main():
     comp_board.print_board()
     player_board.create_ships(player_name)
     comp_board.create_ships('comp')
-    comp_board.generate_blank_board()
-    # comp_board.create_ships('comp')
-    # comp_board.generate_blank_board()
-    # comp_board.create_ships('comp')
-    # comp_board.generate_blank_board()
-    # comp_board.create_ships('comp')
-    # comp_board.generate_blank_board()
+    comp_board.board_contents = comp_board.generate_blank_board()
+    comp_board.create_ships('comp')
+    comp_board.board_contents = comp_board.generate_blank_board()
+    comp_board.create_ships('comp')
+    comp_board.board_contents = comp_board.generate_blank_board()
+    comp_board.create_ships('comp')
+    comp_board.board_contents = comp_board.generate_blank_board()
     print('code got back to main()')
 
 main()
