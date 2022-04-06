@@ -167,9 +167,9 @@ class Gameboard:
 
     def create_ships(self, player):
         '''
-        Gets user input and if valid adds these to the
+        Gets user input and if valid uses it to create ships to the
         Gameboard.ships attribute. Calls add_ship_to_board
-        to update board contents with ships. For computer opponent
+        to update board contents with ships. For the computer board
         the input is randomly generated.
         '''
         for ship in self.ships:
@@ -180,7 +180,7 @@ class Gameboard:
                     ship_placement = input().lower()
                 else:
                     ship_placement = self.generate_comp_input()
-                if validate_ship_input(ship_placement):
+                if self.validate_coords(ship_placement, 'placing'):
                     valid_placement, ship_coordinates, error_message = self.check_ship_placement(ship_placement)
                     if valid_placement:
                         self.ships[ship] = ship_coordinates
@@ -206,7 +206,7 @@ class Gameboard:
         # Convert ship column to int to allow iteration through each ship section
         ship_col = int(ship_placement[1])
         ship_orientation = ship_placement[2]
-        active_board = self.board_contents    
+        active_board = self.board_contents
         coordinates_list = []
 
         # Ships are 4 sections long
@@ -255,40 +255,64 @@ class Gameboard:
         comp_input = f'{row_letter}{col_number}{orientation}'
         return comp_input
 
+    def validate_coords(self, user_input, phase):
+        '''
+        Validates users input for placing a ship to make sure it
+        is the right length and uses only valid characters
+        '''
+        valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
+        valid_col_inputs = ('0', '1', '2', '3', '4', '5')
+        valid_orientation = ('h', 'v')
+        input_len = 0
 
+        if phase == 'firing':
+            input_len = 2
+        elif phase == 'placing':
+            input_len = 3
 
-
-
-def validate_ship_input(user_input):
-    '''
-    Validates users input for placing a ship to make sure it
-    is the right length and uses only valid characters
-    '''
-    valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
-    valid_col_inputs = ('0', '1', '2', '3', '4', '5')
-    valid_orientation = ('h', 'v')
-
-    try:
-        if len(user_input) < 3:
-            print('Input too short, please try again')
-            return False
-        elif len(user_input) > 3:
-            print('Input too long, please try again')
-            return False
-        elif user_input[0] not in valid_row_inputs:
-            print('Invalid co-ordinates entered, please use only A-E and 0-5')
-            return False
-        elif user_input[1] not in valid_col_inputs:
-            print('Invalid co-ordinates entered, please use only A-E and 0-5')
-            return False
-        elif user_input[2] not in valid_orientation:
-            print('Invalid orientation entered, please use H or V')
-            return False
-        else:
+        try:
+            if len(user_input) < input_len:
+                print('Input too short, please try again')
+                return False
+            if len(user_input) > input_len:
+                print('Input too long, please try again')
+                return False
+            if user_input[0] not in valid_row_inputs:
+                print('Invalid co-ordinates entered, please use only A-E and 0-5')
+                return False
+            if user_input[1] not in valid_col_inputs:
+                print('Invalid co-ordinates entered, please use only A-E and 0-5')
+                return False
+            if phase == 'placing':
+                if user_input[2] not in valid_orientation:
+                    print('Invalid orientation entered, please use H or V')
+                    return False
             return True
-    except Exception:
-        print('There was an error with your input, please try again')
-        return False
+        except Exception as e:
+            print(f'There was an error with your input: {e}. Please try again')
+            return False
+
+    def fire_shot(self, player):
+        '''
+        Takes an input, fires a shot at the provided co-ordinates,
+        then provides feedback on where the shot landed
+        '''
+        while True:
+            if player != 'comp':
+                print('Where do you want to fire?')
+                print('Enter the co-ordinates e.g. B4 or E0')
+                shot_coords = input().lower()
+            else:
+                shot_coords = self.generate_comp_input()
+            if self.validate_coords(shot_coords, 'firing'):
+                print('Co-ordinates are valid!')
+            
+            #if player != 'comp':
+                #print(error_message)
+                # if valid_placement:
+                #     self.ships[ship] = ship_coordinates
+                #     self.add_ship_to_board(self.ships[ship])
+                #     break           
 
 def main():
     '''
@@ -304,7 +328,7 @@ def main():
     comp_board.print_board()
     player_board.create_ships(player_name)
     comp_board.create_ships('comp')
-    comp_board.board_contents = comp_board.generate_blank_board()
+    player_board.fire_shot(player_name)
     print('code got back to main()')
 
 main()
