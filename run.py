@@ -206,61 +206,35 @@ class Gameboard:
         # Convert ship column to int to allow iteration through each ship section
         ship_col = int(ship_placement[1])
         ship_orientation = ship_placement[2]
-        active_board = self.board_contents
+        active_board = self.board_contents    
+        coordinates_list = []
 
-        # Checks available space is user has selected horizontal
-        if ship_orientation == 'h':
-            h_coordinates_list = []
-            # Ships are 4 sections long
-            for ship_section in range(4):
-                active_pos_key = f'{ship_row}{ship_col}'
+        # Ships are 4 sections long
+        for ship_section in range(4):
+            active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}' if row_letter_index < 6 else 'blank'
 
-                # Check if co-ordinates for the ship section exist on the board
-                if active_pos_key not in active_board:
-                    error = "Not enough space for this ship, please provide a different location"
-                    return False, h_coordinates_list, error
+            # Check if co-ordinates for the ship section exist on the board
+            if active_pos_key not in active_board:
+                error = "Not enough space for this ship, please provide a different location"
+                return False, coordinates_list, error
 
-                # Get the contents of the board space where the ship_section is to be placed
-                active_pos_contents = active_board[active_pos_key]
+            # Get the contents of the board space where the ship_section is to be placed
+            active_pos_contents = active_board[active_pos_key]
 
-                # Check to make sure contents of the space are a 'wave'
-                if active_pos_contents != Gameboard.wave:
-                    error = "There is another ship in the way, please provide a different location"
-                    return False, h_coordinates_list, error
-                
-                # Add ship_section to co-ordinates list
-                h_coordinates_list.append(active_pos_key)
+            # Check to make sure contents of the space are a 'wave'
+            if active_pos_contents != Gameboard.wave:
+                error = "There is another ship in the way, please provide a different location"
+                return False, coordinates_list, error
+            
+            # Add ship_section to co-ordinates list
+            coordinates_list.append(active_pos_key)
 
-                # Increase ship_col by one so next ship_section is checked
+            # Increase ship_col by one so next ship_section is checked
+            if ship_orientation == 'h':
                 ship_col += 1
-            return True, h_coordinates_list, None
-
-        # Checks available space is user has selected vertical
-        if ship_orientation == 'v':
-            v_coordinates_list = []
-            # Ships are 4 sections long
-            for ship_section in range(4):
-                active_pos_key = f'{Gameboard.row_coordinates_key[row_letter_index]}{ship_col}' if row_letter_index < 6 else 'blank'
-
-                # Check if co-ordinates for the ship section exist on the board
-                if active_pos_key not in active_board:
-                    error = "Not enough space for this ship, please provide a different location"
-                    return False, v_coordinates_list, error
-
-                # Get the contents of the board space where the ship_section is to be placed
-                active_pos_contents = active_board[active_pos_key]
-
-                # Check to make sure contents of the space are a 'wave'
-                if active_pos_contents != Gameboard.wave:
-                    error = "There is another ship in the way, please provide a different location"
-                    return False, v_coordinates_list, error
-                
-                # Add ship_section to co-ordinates list
-                v_coordinates_list.append(active_pos_key)
-
-                # Increase ship_col by one so next ship_section is checked
+            elif ship_orientation == 'v':
                 row_letter_index += 1
-            return True, v_coordinates_list, None
+        return True, coordinates_list, None
     
     def add_ship_to_board(self, ship):
         '''
