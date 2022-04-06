@@ -179,7 +179,7 @@ class Gameboard:
                     print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                     ship_placement = input().lower()
                 else:
-                    ship_placement = self.generate_comp_input()
+                    ship_placement = self.generate_comp_input('placing')
                 if self.validate_coords(ship_placement, 'placing'):
                     valid_placement, ship_coordinates, error_message = self.check_ship_placement(ship_placement)
                     if valid_placement:
@@ -244,15 +244,19 @@ class Gameboard:
         for section in ship:
             self.board_contents[section] = '+'
 
-    def generate_comp_input(self):
+    def generate_comp_input(self, phase):
         '''
         Creates a random input to use for creating
         the computer's ships
         '''
         row_letter = random.choice(Gameboard.row_coordinates_key)
         col_number = random.randint(0, 5)
-        orientation = random.choice(('h','v'))
-        comp_input = f'{row_letter}{col_number}{orientation}'
+        orientation = random.choice(('h', 'v'))
+
+        if phase == 'placing':
+            comp_input = f'{row_letter}{col_number}{orientation}'
+        elif phase == 'firing':
+            comp_input = f'{row_letter}{col_number}'
         return comp_input
 
     def validate_coords(self, user_input, phase):
@@ -303,7 +307,7 @@ class Gameboard:
                 print('Enter the co-ordinates e.g. B4 or E0')
                 shot_coords = input().lower()
             else:
-                shot_coords = self.generate_comp_input()
+                shot_coords = self.generate_comp_input('placing')
             if self.validate_coords(shot_coords, 'firing'):
                 print('Co-ordinates are valid!')
             
