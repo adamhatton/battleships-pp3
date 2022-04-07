@@ -165,7 +165,7 @@ class Gameboard:
         # Adds border to bottom
         print(' -' * 13)
 
-    def create_ships(self, player):
+    def create_ships(self):
         '''
         Gets user input and if valid uses it to create ships to the
         Gameboard.ships attribute. Calls add_ship_to_board
@@ -174,7 +174,7 @@ class Gameboard:
         '''
         for ship in self.ships:
             while True:
-                if player != 'comp':
+                if self.owner != 'comp':
                     print(f'Where would you like to place {ship}?')
                     print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                     ship_placement = input().lower()
@@ -186,7 +186,7 @@ class Gameboard:
                         self.ships[ship] = ship_coordinates
                         self.add_ship_to_board(self.ships[ship])
                         break
-                    if player != 'comp':
+                    if self.owner != 'comp':
                         print(error_message)
         self.print_board()
 
@@ -291,32 +291,45 @@ class Gameboard:
                 if user_input[2] not in valid_orientation:
                     print('Invalid orientation entered, please use H or V')
                     return False
+            if phase == 'firing':
+                if self.board_contents[user_input] == 'M' or self.board_contents[user_input] == '@':
+                    print('You have already fired at this location, please enter different co-ordinates')
+                    return False
             return True
         except Exception as e:
             print(f'There was an error with your input: {e}. Please try again')
             return False
 
-    def fire_shot(self, player):
+    def fire_shot(self, defending_board):
         '''
         Takes an input, fires a shot at the provided co-ordinates,
         then provides feedback on where the shot landed
         '''
         while True:
-            if player != 'comp':
+            if self.owner != 'comp':
                 print('Where do you want to fire?')
                 print('Enter the co-ordinates e.g. B4 or E0')
                 shot_coords = input().lower()
             else:
-                shot_coords = self.generate_comp_input('placing')
+                shot_coords = self.generate_comp_input('firing')
+
             if self.validate_coords(shot_coords, 'firing'):
                 print('Co-ordinates are valid!')
-            
-            #if player != 'comp':
-                #print(error_message)
-                # if valid_placement:
-                #     self.ships[ship] = ship_coordinates
-                #     self.add_ship_to_board(self.ships[ship])
-                #     break           
+                shot_result = defending_board.update_board_with_shot(shot_coords)
+
+                print(shot_result)
+                defending_board.print_board()
+
+    def update_board_with_shot(self, shot_coords):
+        '''
+        Takes a shot and updates the board_contents to
+        show where a shot has landed. Returns the result
+        of the shot
+        '''
+        shot_result = 'hit' if self.board_contents[shot_coords] == '+' else 'miss'
+        self.board_contents[shot_coords] = '@' if shot_result == 'hit' else 'M'
+
+        return shot_result
 
 def main():
     '''
@@ -327,12 +340,12 @@ def main():
     player_name = get_player_name()
     show_instructions()
     player_board = Gameboard(player_name)
-    comp_board = Gameboard('Computer')
+    comp_board = Gameboard('comp')
     player_board.print_board()
     comp_board.print_board()
-    player_board.create_ships(player_name)
-    comp_board.create_ships('comp')
-    player_board.fire_shot(player_name)
+    player_board.create_ships()
+    comp_board.create_ships()
+    player_board.fire_shot(comp_board)
     print('code got back to main()')
 
 main()
