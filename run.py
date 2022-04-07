@@ -1,25 +1,28 @@
 import sys
 import random
 
-# print(
-#     '''
-#   ____       _______ _______ _      ______    _____ _    _ _____ _____   _____ 
-#  |  _ \   /\|__   __|__   __| |    |  ____|  / ____| |  | |_   _|  __ \ / ____|
-#  | |_) | /  \  | |     | |  | |    | |__    | (___ | |__| | | | | |__) | (___  
-#  |  _ < / /\ \ | |     | |  | |    |  __|    \___ \|  __  | | | |  ___/ \___ \ 
-#  | |_) / ____ \| |     | |  | |____| |____   ____) | |  | |_| |_| |     ____) |
-#  |____/_/    \_\_|     |_|  |______|______| |_____/|_|  |_|_____|_|    |_____/ 
-#     '''
-# )
-
-
-def welcome_message():
+print(
     '''
-    Prints welcome message to user, asks if they want to play a game and
+  ____       _______ _______ _      ______    _____ _    _ _____ _____   _____ 
+ |  _ \   /\|__   __|__   __| |    |  ____|  / ____| |  | |_   _|  __ \ / ____|
+ | |_) | /  \  | |     | |  | |    | |__    | (___ | |__| | | | | |__) | (___  
+ |  _ < / /\ \ | |     | |  | |    |  __|    \___ \|  __  | | | |  ___/ \___ \ 
+ | |_) / ____ \| |     | |  | |____| |____   ____) | |  | |_| |_| |     ____) |
+ |____/_/    \_\_|     |_|  |______|______| |_____/|_|  |_|_____|_|    |_____/ 
+    '''
+)
+
+
+def play_message(game):
+    '''
+    Prints message to user, asks if they want to play a game and
     collects user input
     '''
     while True:
-        print('Would you like to play a game?')
+        if game == 'first':
+            print('Would you like to play a game?')
+        else:
+            print('Would you like to play again?')            
         print('[y] = yes, [n] = no')
 
         player_answer = input('\n').lower()
@@ -346,7 +349,7 @@ def main():
     '''
     Runs all the functions for the game
     '''
-    player_response = welcome_message()
+    player_response = play_message('first')
     play_or_quit(player_response)
     player_name = get_player_name()
     show_instructions()
@@ -358,14 +361,18 @@ def main():
     comp_board.create_ships()
 
     while True:
-        player_board.fire_shot(comp_board)
-        if player_board.check_for_win(comp_board):
-            break
-        
-        comp_board.fire_shot(player_board)
-        if comp_board.check_for_win(player_board):
-            break
-
+        #TODO create ships here
+        while True:
+            player_board.fire_shot(comp_board)
+            if player_board.check_for_win(comp_board):
+                break
+            
+            comp_board.fire_shot(player_board)
+            if comp_board.check_for_win(player_board):
+                break
+        player_response = play_message('rematch')
+        play_or_quit(player_response)
+        #TODO reset variables
     print('code got back to main()')
 
 main()
