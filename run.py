@@ -334,6 +334,13 @@ class Gameboard:
         self.board_contents[shot_coords] = 'M'
         return True
 
+    def check_for_win(self, defending_board):
+        if '+' not in defending_board.board_contents.values():
+            print(f"{self.owner} has destroyed all of {defending_board.owner}'s ships!")
+            return True
+        return False
+
+
 
 def main():
     '''
@@ -352,7 +359,12 @@ def main():
 
     while True:
         player_board.fire_shot(comp_board)
+        if player_board.check_for_win(comp_board):
+            break
+        
         comp_board.fire_shot(player_board)
+        if comp_board.check_for_win(player_board):
+            break
 
     print('code got back to main()')
 
