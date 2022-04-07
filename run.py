@@ -313,7 +313,8 @@ class Gameboard:
                 if defending_board.update_board_with_shot(shot_coords, self):
                     defending_board.print_board()
                     break
-                print('You have already fired at this location, please enter different co-ordinates')
+                if self.owner != 'Computer':
+                    print('You have already fired at this location, please enter different co-ordinates')
 
     def update_board_with_shot(self, shot_coords, attacking_board):
         '''
@@ -348,7 +349,11 @@ def main():
     comp_board.print_board()
     player_board.create_ships()
     comp_board.create_ships()
-    player_board.fire_shot(comp_board)
+
+    while True:
+        player_board.fire_shot(comp_board)
+        comp_board.fire_shot(player_board)
+
     print('code got back to main()')
 
 main()
