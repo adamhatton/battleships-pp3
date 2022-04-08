@@ -198,7 +198,7 @@ class Gameboard:
         '''
         Takes the co-ordinates as input by the user and splits it into a row,
         column and orientation. Takes the row and column to determine a starting
-        position then cycles through each section of the ship (4) to checks that
+        position then cycles through each section of the ship (4) to check that
         the co-ordiantes exist and that they don't contain another ship, using 
         the orienation to determine which co-ordinates to check.
         '''
@@ -264,8 +264,8 @@ class Gameboard:
 
     def validate_coords(self, user_input, phase):
         '''
-        Validates users input for placing a ship to make sure it
-        is the right length and uses only valid characters
+        Validates co-ordinates input by user to make sure they
+        are the right length and use only valid characters
         '''
         valid_row_inputs = ('a', 'b', 'c', 'd', 'e', 'f')
         valid_col_inputs = ('0', '1', '2', '3', '4', '5')
@@ -343,7 +343,12 @@ class Gameboard:
             return True
         return False
 
-
+    def reset_variables(self):
+        '''
+        Resets the Gameboard variables that can change during the game
+        '''
+        self.board_contents = self.generate_blank_board()
+        self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
 
 def main():
     '''
@@ -355,13 +360,11 @@ def main():
     show_instructions()
     player_board = Gameboard(player_name)
     comp_board = Gameboard('Computer')
-    player_board.print_board()
-    comp_board.print_board()
-    player_board.create_ships()
-    comp_board.create_ships()
 
     while True:
-        #TODO create ships here
+        player_board.create_ships()
+        comp_board.create_ships()
+
         while True:
             player_board.fire_shot(comp_board)
             if player_board.check_for_win(comp_board):
@@ -370,9 +373,11 @@ def main():
             comp_board.fire_shot(player_board)
             if comp_board.check_for_win(player_board):
                 break
+
         player_response = play_message('rematch')
         play_or_quit(player_response)
-        #TODO reset variables
+        player_board.reset_variables()
+        comp_board.reset_variables()
     print('code got back to main()')
 
 main()
