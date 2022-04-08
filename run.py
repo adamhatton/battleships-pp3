@@ -174,18 +174,18 @@ class Gameboard:
         Prints player's board and their guess board to 
         the terminal in a grid format
         '''
-        # Add column numbers across top of board
         left_number_headings = '  0   1   2   3   4   5'
         right_number_headings = '   0   1   2   3   4   5'
         border = ' -' * 13
 
+        # Prints board titles
         print('{:^26}{:10}{:^26}'.format(f"{self.owner}'s Board",'', f"{guess_board.owner}'s Board"))
-        
+        # Prints board headings
         print('{:^26}{:10}{:^26}'.format(left_number_headings, '', right_number_headings))
+        # Prints border to top of board
         print('{:^26}{:10}{:^26}'.format(border, '', border))
 
-
-        # Prints each row starting with the row letter
+        # Generates and prints each row by combining info from both boards
         for row in range(self.rows):
             left_row_to_print = f'{Gameboard.row_coordinates_key[row]}' + '| '
             right_row_to_print = f'{Gameboard.row_coordinates_key[row]}' + '| '
@@ -198,7 +198,7 @@ class Gameboard:
             print('{:^26}{:10}{:^26}'.format(left_row_to_print, '', right_row_to_print))
 
         # Adds border to bottom
-        print('{:^26}{:10}{:^26}'.format(border, '', border))
+        print('{:^26}{:10}{:^28}'.format(border, '', border))
 
     def create_ships(self):
         '''
@@ -210,7 +210,7 @@ class Gameboard:
         for ship in self.ships:
             while True:
                 if self.owner != 'Computer':
-                    print(f'Where would you like to place {ship}?')
+                    print(f'Where would you like to place {ship}? (Length = 4)')
                     print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                     ship_placement = input().lower()
                 else:
