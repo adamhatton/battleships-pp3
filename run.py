@@ -75,7 +75,7 @@ def get_player_name():
             player_name = input('Please enter your name (leave blank to use "Player1"): \n')
             if player_name == '':
                 return 'Player1'
-            elif len(player_name) > 40:
+            elif len(player_name) > 18:
                 print("My memory isn't that good, please choose something shorter")
                 continue
             else:
@@ -153,6 +153,7 @@ class Gameboard:
         Prints the board contents to the terminal in a grid format
         '''
         # Add column numbers across top of board
+        print(f"{self.owner}'s board")
         print('   0   1   2   3   4   5')
 
         # Adds border to top
@@ -167,6 +168,37 @@ class Gameboard:
 
         # Adds border to bottom
         print(' -' * 13)
+
+    def print_both_boards(self, guess_board):
+        '''
+        Prints player's board and their guess board to 
+        the terminal in a grid format
+        '''
+        # Add column numbers across top of board
+        left_number_headings = '  0   1   2   3   4   5'
+        right_number_headings = '   0   1   2   3   4   5'
+        border = ' -' * 13
+
+        print('{:^26}{:10}{:^26}'.format(f"{self.owner}'s Board",'', f"{guess_board.owner}'s Board"))
+        
+        print('{:^26}{:10}{:^26}'.format(left_number_headings, '', right_number_headings))
+        print('{:^26}{:10}{:^26}'.format(border, '', border))
+
+
+        # Prints each row starting with the row letter
+        for row in range(self.rows):
+            left_row_to_print = f'{Gameboard.row_coordinates_key[row]}' + '| '
+            right_row_to_print = f'{Gameboard.row_coordinates_key[row]}' + '| '
+            for col in range(self.cols):
+                left_row_to_print += self.board_contents[f'{Gameboard.row_coordinates_key[row]}{col}'] + ' | '
+                if guess_board.board_contents[f'{Gameboard.row_coordinates_key[row]}{col}'] == '+':
+                    right_row_to_print += '~' + ' | '
+                else:
+                    right_row_to_print += guess_board.board_contents[f'{Gameboard.row_coordinates_key[row]}{col}'] + ' | '
+            print('{:^26}{:10}{:^26}'.format(left_row_to_print, '', right_row_to_print))
+
+        # Adds border to bottom
+        print('{:^26}{:10}{:^26}'.format(border, '', border))
 
     def create_ships(self):
         '''
@@ -188,10 +220,12 @@ class Gameboard:
                     if valid_placement:
                         self.ships[ship] = ship_coordinates
                         self.add_ship_to_board(self.ships[ship])
+                        if self.owner != 'Computer':
+                            self.print_board()
                         break
                     if self.owner != 'Computer':
                         print(error_message)
-        self.print_board()
+
 
 
     def check_ship_placement(self, ship_placement):
@@ -314,7 +348,6 @@ class Gameboard:
 
             if self.validate_coords(shot_coords, 'firing'):
                 if defending_board.update_board_with_shot(shot_coords, self):
-                    defending_board.print_board()
                     break
                 if self.owner != 'Computer':
                     print('You have already fired at this location, please enter different co-ordinates')
@@ -364,13 +397,16 @@ def main():
     while True:
         player_board.create_ships()
         comp_board.create_ships()
+        player_board.print_both_boards(comp_board)
 
         while True:
             player_board.fire_shot(comp_board)
+            player_board.print_both_boards(comp_board)
             if player_board.check_for_win(comp_board):
                 break
             
             comp_board.fire_shot(player_board)
+            player_board.print_both_boards(comp_board)
             if comp_board.check_for_win(player_board):
                 break
 
