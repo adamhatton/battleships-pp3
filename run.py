@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+from time import sleep
 
 print(
     '''
@@ -21,10 +22,10 @@ def play_message(game):
     '''
     while True:
         if game == 'first':
-            print('Would you like to play a game?')
+            typed_print('Would you like to play a game?\n')
         else:
-            print('Would you like to play again?')            
-        player_answer = input('[y] = yes, [n] = no\n').lower()
+            typed_print('Would you like to play again?')            
+        player_answer = typed_input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
             break
@@ -45,7 +46,7 @@ def validate_input(user_input):
         else:
             raise Exception
     except Exception:
-        print("Input must be 'y' or 'n', please try again\n")
+        typed_print("Input must be 'y' or 'n', please try again\n")
         return False
     return True
 
@@ -58,7 +59,7 @@ def play_or_quit(play_game):
     if play_game:
         return
     else:
-        print(
+        typed_print(
             '''Closing game. If you change your mind, press the 'Run Program'
 button above to restart the game''')
         sys.exit()
@@ -71,16 +72,16 @@ def get_player_name():
     '''
     while True:
         try:
-            player_name = input('\nPlease enter your name (leave blank to use "Player1"): \n')
+            player_name = typed_input('\nPlease enter your name (leave blank to use "Player1"): \n')
             if player_name == '':
                 return 'Player1'
             elif len(player_name) > 18:
-                print("My memory isn't that good, please choose something shorter")
+                typed_print("My memory isn't that good, please choose something shorter")
                 continue
             else:
                 return player_name
         except Exception:
-            print('There was an error with your name, please try again')
+            typed_print('There was an error with your name, please try again')
 
 
 def show_instructions(player_name):
@@ -88,10 +89,10 @@ def show_instructions(player_name):
     Asks user if they want to see the rules and responds based on user input
     '''
     while True:
-        clearConsole()
+        clear_console()
         print(f'\nWelcome {player_name}')
-        print('Would you like to see the rules?')
-        player_answer = input('[y] = yes, [n] = no\n').lower()
+        typed_print('Would you like to see the rules?\n')
+        player_answer = typed_input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
             break
@@ -99,7 +100,7 @@ def show_instructions(player_name):
     if player_answer == 'n':
         return
     else:
-        clearConsole()
+        clear_console()
         print('''
   _____  _    _ _      ______  _____ 
  |  __ \| |  | | |    |  ____|/ ____|
@@ -125,6 +126,41 @@ M = A shot which missed''')
         input('\nPress any key to continue\n')
         return
 
+def game_start_text():
+    clear_console()
+    print('''
+   _____          __  __ ______    _____ _______       _____ _______ 
+  / ____|   /\   |  \/  |  ____|  / ____|__   __|/\   |  __ \__   __|
+ | |  __   /  \  | \  / | |__    | (___    | |  /  \  | |__) | | |   
+ | | |_ | / /\ \ | |\/| |  __|    \___ \   | | / /\ \ |  _  /  | |   
+ | |__| |/ ____ \| |  | | |____   ____) |  | |/ ____ \| | \ \  | |   
+  \_____/_/    \_\_|  |_|______| |_____/   |_/_/    \_\_|  \_\ |_|                                                                                                                                             
+    ''')
+
+    input('\nPress any key to continue\n')
+    return
+
+def commence_attack_text():
+    clear_console()
+    print('''
+   _____ ____  __  __ __  __ ______ _   _  _____ ______ 
+  / ____/ __ \|  \/  |  \/  |  ____| \ | |/ ____|  ____|
+ | |   | |  | | \  / | \  / | |__  |  \| | |    | |__   
+ | |   | |  | | |\/| | |\/| |  __| | . ` | |    |  __|  
+ | |___| |__| | |  | | |  | | |____| |\  | |____| |____ 
+  \_____\____/|_|  |_|_|  |_|______|_| \_|\_____|______|
+
+        _______ _______       _____ _  __
+     /\|__   __|__   __|/\   / ____| |/ /
+    /  \  | |     | |  /  \ | |    | ' / 
+   / /\ \ | |     | | / /\ \| |    |  <  
+  / ____ \| |     | |/ ____ \ |____| . \ 
+ /_/    \_\_|     |_/_/    \_\_____|_|\_\                                                                                                                                                                                                      
+    ''')
+    
+    input('\nPress any key to continue\n')
+    clear_console()
+    return
 
 class Gameboard:
     '''
@@ -163,7 +199,7 @@ class Gameboard:
         Prints the board contents to the terminal in a grid format
         '''
         # Add column numbers across top of board
-        print(f"{self.owner}'s board")
+        print('{:^26}'.format(f"{self.owner}'s Board"))
         print('   0   1   2   3   4   5')
 
         # Adds border to top
@@ -184,6 +220,7 @@ class Gameboard:
         Prints player's board and their guess board to 
         the terminal in a grid format
         '''
+        clear_console()
         left_number_headings = '  0   1   2   3   4   5'
         right_number_headings = '   0   1   2   3   4   5'
         border = ' -' * 13
@@ -218,9 +255,11 @@ class Gameboard:
         the input is randomly generated.
         '''
         for ship in self.ships:
+            clear_console()
             while True:
                 if self.owner != 'Computer':
-                    print(f'Where would you like to place {ship}? (Length = 4)')
+                    self.print_board()
+                    typed_print(f'Where would you like to place {ship}? (Length = 4)\n')
                     print('Enter the starting co-ordinates followed by V for vertical placement (top to bottom) or H for horizontal placement (left to right), e.g. A2H or C4V')
                     ship_placement = input().lower()
                 else:
@@ -372,12 +411,14 @@ class Gameboard:
             return False
 
         if self.board_contents[shot_coords] == '+':
-            print(f'{attacking_board.owner} got a direct hit on {self.owner}!')
+            print(f'{attacking_board.owner} fired at {shot_coords} and got a direct hit on {self.owner}!')
             self.board_contents[shot_coords] = '@'
+            sleep(1.5)
             return True
         
-        print(f"{attacking_board.owner} missed all of {self.owner}'s ships!")
+        print(f"{attacking_board.owner} fired at {shot_coords} missed all of {self.owner}'s ships!")
         self.board_contents[shot_coords] = 'M'
+        sleep(1.5)
         return True
 
     def check_for_win(self, defending_board):
@@ -394,11 +435,28 @@ class Gameboard:
         self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
 
 # Code taken from https://www.delftstack.com/howto/python/python-clear-console/
-def clearConsole():
+def clear_console():
     command = 'clear'
     if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
         command = 'cls'
     os.system(command)
+# End of code taken from delftstack.com
+
+# Code taken from https://www.101computing.net/python-typing-text-effect/
+def typed_print(text):
+    for character in text:
+        sys.stdout.write(character)
+        sys.stdout.flush()
+        sleep(0.02)
+
+def typed_input(text):
+    for character in text:
+        sys.stdout.write(character)
+        sys.stdout.flush()
+        sleep(0.02)
+    value = input()  
+    return value
+# End of code taken from 101computing.net
 
 def main():
     '''
@@ -408,12 +466,14 @@ def main():
     play_or_quit(player_response)
     player_name = get_player_name()
     show_instructions(player_name)
+    game_start_text()
     player_board = Gameboard(player_name)
     comp_board = Gameboard('Computer')
 
     while True:
         player_board.create_ships()
         comp_board.create_ships()
+        commence_attack_text()
         player_board.print_both_boards(comp_board)
 
         while True:
