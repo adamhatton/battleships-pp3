@@ -1,3 +1,4 @@
+import os
 import sys
 import random
 
@@ -23,9 +24,7 @@ def play_message(game):
             print('Would you like to play a game?')
         else:
             print('Would you like to play again?')            
-        print('[y] = yes, [n] = no')
-
-        player_answer = input('\n').lower()
+        player_answer = input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
             break
@@ -72,7 +71,7 @@ def get_player_name():
     '''
     while True:
         try:
-            player_name = input('Please enter your name (leave blank to use "Player1"): \n')
+            player_name = input('\nPlease enter your name (leave blank to use "Player1"): \n')
             if player_name == '':
                 return 'Player1'
             elif len(player_name) > 18:
@@ -84,15 +83,15 @@ def get_player_name():
             print('There was an error with your name, please try again')
 
 
-def show_instructions():
+def show_instructions(player_name):
     '''
     Asks user if they want to see the rules and responds based on user input
     '''
     while True:
+        clearConsole()
+        print(f'\nWelcome {player_name}')
         print('Would you like to see the rules?')
-        print('[y] = yes, [n] = no')
-
-        player_answer = input('\n').lower()
+        player_answer = input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
             break
@@ -100,6 +99,15 @@ def show_instructions():
     if player_answer == 'n':
         return
     else:
+        clearConsole()
+        print('''
+  _____  _    _ _      ______  _____ 
+ |  __ \| |  | | |    |  ____|/ ____|
+ | |__) | |  | | |    | |__  | (___  
+ |  _  /| |  | | |    |  __|  \___ \ 
+ | | \ \| |__| | |____| |____ ____) |
+ |_|  \_\\_____/|______|______|_____/                                                                                   
+        ''')
         print('''This version of battleships is played on a 6x6 board.
 You will be given three ships of the same length to place on your board,
 and your opponenet will do the same with their board. The objective is to sink
@@ -113,6 +121,8 @@ The symbols on the board are as follows:
 + = An undamaged section of a ship
 @ = A section of a ship which has been hit
 M = A shot which missed''')
+
+        input('\nPress any key to continue\n')
         return
 
 
@@ -383,6 +393,13 @@ class Gameboard:
         self.board_contents = self.generate_blank_board()
         self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
 
+# Code taken from https://www.delftstack.com/howto/python/python-clear-console/
+def clearConsole():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
+        command = 'cls'
+    os.system(command)
+
 def main():
     '''
     Runs all the functions for the game
@@ -390,7 +407,7 @@ def main():
     player_response = play_message('first')
     play_or_quit(player_response)
     player_name = get_player_name()
-    show_instructions()
+    show_instructions(player_name)
     player_board = Gameboard(player_name)
     comp_board = Gameboard('Computer')
 
