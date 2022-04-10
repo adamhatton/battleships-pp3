@@ -72,7 +72,7 @@ def get_player_name():
     while True:
         try:
             player_name = typed_input('''
-Please enter your name (leave blank to use "Player1"): \n''')
+Please enter your name (leave blank to use "Player1"): \n''').strip()
             if player_name == '':
                 return 'Player1'
             elif len(player_name) > 18:
