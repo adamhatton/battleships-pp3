@@ -186,7 +186,7 @@ class Gameboard:
             for col in range(self.cols):
                 coord = f'{Gameboard.row_coords_key[row]}{col}'
                 l_row_to_prt += self.board_contents[coord] + ' | '
-                if guess_board.board_contents[coord] == 'test':
+                if guess_board.board_contents[coord] == '+':
                     r_row_to_prt += '~' + ' | '
                 else:
                     r_row_to_prt += guess_board.board_contents[coord] + ' | '
