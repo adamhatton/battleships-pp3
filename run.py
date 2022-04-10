@@ -116,8 +116,12 @@ class Gameboard:
         self.board_contents = self.generate_blank_board()
         self.owner = owner
         self.ships = {
-            'ship 1': ['', ''], 'ship 2': ['', '', ''],
-            'ship 3': ['', '', '', '']
+            'cruiser': ['', ''], 'submarine': ['', '', ''],
+            'destroyer': ['', '', '', '']
+        }
+        self.ships_status = {
+            'cruiser': 'active', 'submarine': 'active',
+            'destroyer': 'active'
         }
 
     def generate_blank_board(self):
@@ -182,7 +186,7 @@ class Gameboard:
             for col in range(self.cols):
                 coord = f'{Gameboard.row_coords_key[row]}{col}'
                 l_row_to_prt += self.board_contents[coord] + ' | '
-                if guess_board.board_contents[coord] == '+':
+                if guess_board.board_contents[coord] == 'test':
                     r_row_to_prt += '~' + ' | '
                 else:
                     r_row_to_prt += guess_board.board_contents[coord] + ' | '
@@ -205,10 +209,11 @@ class Gameboard:
                 if self.owner != 'Computer':
                     self.print_board()
                     typed_print(f'''
-Where would you like to place {ship}? (Length = {ship_len})\n''')
+Where would you like to place your {ship.capitalize()}? (Length = {ship_len})
+''')
                     print('''
 Enter the starting co-ordinates followed by V for vertical placement (top to
-bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
+bottom) or H for horizontal placement (left to right), e.g. A2H or C4V:''')
                     ship_placement = input().lower()
                 else:
                     ship_placement = self.generate_comp_input('placing')
@@ -354,7 +359,7 @@ There is another ship in the way, please provide a different location\n'''
 
             if self.validate_coords(shot_coords, 'firing'):
                 if defending_board.update_board_with_shot(shot_coords, self):
-
+                    self.check_destroyed_ship(defending_board)
                     break
                 if self.owner != 'Computer':
                     print('''
@@ -391,6 +396,28 @@ co-ordinates''')
         self.board_contents[shot_coords] = 'M'
         return True
 
+    def check_destroyed_ship(self, def_board):
+        '''
+        Checks each ship on the defending board to see if it has
+        been destroyed. Prints a message to user when a ship
+        gets destroyed.
+        '''
+        for ship in def_board.ships_status:
+            if def_board.ships_status[ship] == 'active':
+                coords_to_check = []
+                for sect in def_board.ships[ship]:
+                    coords_to_check.append(def_board.board_contents[sect])
+                if '+' in coords_to_check:
+                    continue
+
+                message = (
+                    f'{self.owner} destroyed '
+                    f"{def_board.owner}'s {ship.capitalize()}!"
+                )
+                print(message)
+                sleep(1.1)
+                def_board.ships_status[ship] = 'destroyed'
+
     def check_for_win(self, defending_board):
         '''
         Checks for a win by seeing if there are any ship sections left
@@ -399,6 +426,7 @@ co-ordinates''')
         if '+' not in defending_board.board_contents.values():
             print(f'''
 {self.owner} has destroyed all of {defending_board.owner}'s ships!''')
+            sleep(3)
             return True
         return False
 
@@ -408,8 +436,13 @@ co-ordinates''')
         '''
         self.board_contents = self.generate_blank_board()
         self.ships = {
-            'ship 1': ['', ''], 'ship 2': ['', '', ''],
-            'ship 3': ['', '', '', '']}
+            'cruiser': ['', ''], 'submarine': ['', '', ''],
+            'destroyer': ['', '', '', '']
+        }
+        self.ships_status = {
+            'cruiser': 'active', 'submarine': 'active',
+            'destroyer': 'active'
+        }
 
 
 # Code taken from https://www.101computing.net/python-typing-text-effect/

@@ -30,7 +30,9 @@ class Headings:
 ''')
         print('''This version of battleships is played on a 6x6 board.
 You will be given three ships to place on your board, and your opponenet
-will do the same with their board. The ships sizes are: 1x2, 1x3 and 1x4
+will do the same with their board. The ships sizes are: 1x2 (Cruiser),
+1x3 (Submarine) and 1x4 (Destroyer).
+
 The objective is to sink your opponent's ships by supplying the
 co-ordinates of where you think they have placed their ships. The first
 player to sink all the opponent's ships is the winner.
