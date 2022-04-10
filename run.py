@@ -39,6 +39,7 @@ def validate_input(user_input):
             raise Exception
     except Exception:
         typed_print("Input must be 'y' or 'n', please try again\n")
+        sleep(1.1)
         return False
     return True
 
@@ -67,7 +68,7 @@ def get_player_name():
             player_name = typed_input('''
 Please enter your name (leave blank to use "Player 1"): \n''').strip()
             if player_name == '':
-                return 'Player1'
+                return 'Player 1'
             elif len(player_name) > 18:
                 typed_print('''
 My memory isn't that good, please choose something
@@ -114,7 +115,10 @@ class Gameboard:
         self.cols = 6
         self.board_contents = self.generate_blank_board()
         self.owner = owner
-        self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
+        self.ships = {
+            'ship 1': ['', ''], 'ship 2': ['', '', ''],
+            'ship 3': ['', '', '', '']
+        }
 
     def generate_blank_board(self):
         '''
@@ -194,13 +198,14 @@ class Gameboard:
         to update board contents with ships. For the computer board
         the input is randomly generated.
         '''
-        for ship in self.ships:
+        for ship, ship_coords in self.ships.items():
             while True:
                 clear_console()
+                ship_len = len(ship_coords)
                 if self.owner != 'Computer':
                     self.print_board()
                     typed_print(f'''
-Where would you like to place {ship}? (Length = 4)\n''')
+Where would you like to place {ship}? (Length = {ship_len})\n''')
                     print('''
 Enter the starting co-ordinates followed by V for vertical placement (top to
 bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
@@ -209,7 +214,7 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
                     ship_placement = self.generate_comp_input('placing')
                 if self.validate_coords(ship_placement, 'placing'):
                     valid_placement, ship_coordinates, error_message =\
-                        self.check_ship_placement(ship_placement)
+                        self.check_ship_placement(ship_len, ship_placement)
                     if valid_placement:
                         self.ships[ship] = ship_coordinates
                         self.add_ship_to_board(self.ships[ship])
@@ -217,15 +222,14 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
                             self.print_board()
                         break
                     if self.owner != 'Computer':
-                        clear_console()
                         print(error_message)
-                        sleep(0.8)
+                        sleep(1.4)
 
-    def check_ship_placement(self, ship_placement):
+    def check_ship_placement(self, ship_len, ship_placement):
         '''
         Takes the co-ordinates as input by the user and splits it into a row,
         column and orientation. Takes the row and column to determine a
-        starting position then cycles through each section of the ship (4)
+        starting position then cycles through each section of the ship
         to check that the co-ordiantes exist and that they don't contain
         another ship, using the orienation to determine which co-ordinates
         to check.
@@ -240,7 +244,7 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
         active_board = self.board_contents
         coordinates_list = []
 
-        for ship_section in range(4):
+        for ship_section in range(ship_len):
             active_pos_key = (
                 f'{Gameboard.row_coords_key[row_letter_index]}{ship_col}' if
                 row_letter_index < 6 else 'blank')
@@ -255,7 +259,6 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
 
             # Check to make sure contents of the space are a 'wave'
             if active_pos_contents != Gameboard.wave:
-                clear_console()
                 error = '''
 There is another ship in the way, please provide a different location\n'''
                 return False, coordinates_list, error
@@ -404,7 +407,9 @@ co-ordinates''')
         Resets the Gameboard variables that can change during the game
         '''
         self.board_contents = self.generate_blank_board()
-        self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
+        self.ships = {
+            'ship 1': ['', ''], 'ship 2': ['', '', ''],
+            'ship 3': ['', '', '', '']}
 
 
 # Code taken from https://www.101computing.net/python-typing-text-effect/
@@ -468,7 +473,6 @@ def main():
         play_or_quit(player_response)
         player_board.reset_variables()
         comp_board.reset_variables()
-    print('code got back to main()')
 
 
 main()

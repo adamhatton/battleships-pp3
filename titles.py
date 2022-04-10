@@ -29,11 +29,11 @@ class Headings:
  |_|  \_\\_____/|______|______|_____/
 ''')
         print('''This version of battleships is played on a 6x6 board.
-You will be given three ships of the same length to place on your board,
-and your opponenet will do the same with their board. The objective is to sink
-your opponent's ships by supplying the co-ordinates of where you think they
-have placed their ships. The first player to sink all the opponent's ships
-is the winner.
+You will be given three ships to place on your board, and your opponenet
+will do the same with their board. The ships sizes are: 1x2, 1x3 and 1x4
+The objective is to sink your opponent's ships by supplying the
+co-ordinates of where you think they have placed their ships. The first
+player to sink all the opponent's ships is the winner.
 
 To keep track of your shots, you will be provided with a 'guess' board.
 The symbols on the board are as follows:
