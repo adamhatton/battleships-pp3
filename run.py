@@ -11,8 +11,7 @@ print(
  |  _ < / /\ \ | |     | |  | |    |  __|    \___ \|  __  | | | |  ___/ \___ \\
  | |_) / ____ \| |     | |  | |____| |____   ____) | |  | |_| |_| |     ____) |
  |____/_/    \_\_|     |_|  |______|______| |_____/|_|  |_|_____|_|    |_____/
-    '''
-)
+''')
 
 
 def play_message(game):
@@ -24,7 +23,7 @@ def play_message(game):
         if game == 'first':
             typed_print('Would you like to play a game?\n')
         else:
-            typed_print('Would you like to play again?')
+            typed_print('Would you like to play again?\n')
         player_answer = typed_input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
@@ -61,7 +60,7 @@ def play_or_quit(play_game):
     else:
         typed_print('''
 Closing game. If you change your mind, press the 'Run Program'
-button above to restart the game''')
+button above to restart the game\n''')
         sys.exit()
 
 
@@ -111,7 +110,7 @@ def show_instructions(player_name):
  |  _  /| |  | | |    |  __|  \___ \\
  | | \ \| |__| | |____| |____ ____) |
  |_|  \_\\_____/|______|______|_____/
-        ''')
+''')
         print('''This version of battleships is played on a 6x6 board.
 You will be given three ships of the same length to place on your board,
 and your opponenet will do the same with their board. The objective is to sink
@@ -126,7 +125,7 @@ The symbols on the board are as follows:
 @ = A section of a ship which has been hit
 M = A shot which missed''')
 
-        input('\nPress any key to continue\n')
+        input('\nPress enter key to continue\n')
         return
 
 
@@ -139,9 +138,9 @@ def game_start_text():
  | | |_ | / /\ \ | |\/| |  __|    \___ \   | | / /\ \ |  _  /  | |
  | |__| |/ ____ \| |  | | |____   ____) |  | |/ ____ \| | \ \  | |
   \_____/_/    \_\_|  |_|______| |_____/   |_/_/    \_\_|  \_\ |_|
-    ''')
+''')
 
-    input('\nPress any key to continue\n')
+    input('\nPress enter key to continue\n')
     return
 
 
@@ -161,11 +160,35 @@ def commence_attack_text():
    / /\ \ | |     | | / /\ \| |    |  <
   / ____ \| |     | |/ ____ \ |____| . \\
  /_/    \_\_|     |_/_/    \_\_____|_|\_\\
-    ''')
-    input('\nPress any key to continue\n')
+''')
+    input('\nPress enter key to continue\n')
     clear_console()
     return
 
+def win_lose_text(winner):
+    clear_console()
+    if winner == 'player':
+        print('''
+ __     ______  _    _  __          _______ _   _
+ \ \   / / __ \| |  | | \ \        / /_   _| \ | |
+  \ \_/ / |  | | |  | |  \ \  /\  / /  | | |  \| |
+   \   /| |  | | |  | |   \ \/  \/ /   | | | . ` |
+    | | | |__| | |__| |    \  /\  /   _| |_| |\  |
+    |_|  \____/ \____/      \/  \/   |_____|_| \_|
+''')
+
+    if winner == 'computer':
+        print('''
+ __     ______  _    _   _      ____   _____ ______
+ \ \   / / __ \| |  | | | |    / __ \ / ____|  ____|
+  \ \_/ / |  | | |  | | | |   | |  | | (___ | |__   
+   \   /| |  | | |  | | | |   | |  | |\___ \|  __|  
+    | | | |__| | |__| | | |___| |__| |____) | |____ 
+    |_|  \____/ \____/  |______\____/|_____/|______|
+''')
+    input('\nPress enter key to continue\n')
+    clear_console()
+    return
 
 class Gameboard:
     '''
@@ -264,8 +287,8 @@ class Gameboard:
         the input is randomly generated.
         '''
         for ship in self.ships:
-            clear_console()
             while True:
+                clear_console()
                 if self.owner != 'Computer':
                     self.print_board()
                     typed_print(f'''
@@ -286,7 +309,9 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
                             self.print_board()
                         break
                     if self.owner != 'Computer':
+                        clear_console()
                         print(error_message)
+                        sleep(0.8)
 
     def check_ship_placement(self, ship_placement):
         '''
@@ -308,12 +333,13 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
         coordinates_list = []
 
         for ship_section in range(4):
-            coord = f'{Gameboard.row_coords_key[row_letter_index]}{ship_col}'
-            active_pos_key = coord if row_letter_index < 6 else 'blank'
+            active_pos_key = (
+                f'{Gameboard.row_coords_key[row_letter_index]}{ship_col}' if
+                row_letter_index < 6 else 'blank')
 
             # Check if co-ordinates for the ship section exist on the board
             if active_pos_key not in active_board:
-                error = "Not enough space, please provide a different location"
+                error = "Not enough space, please provide a different location\n"
                 return False, coordinates_list, error
 
             # Get contents of board space where ship_section is to be placed
@@ -323,7 +349,7 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
             if active_pos_contents != Gameboard.wave:
                 clear_console()
                 error = '''
-There is another ship in the way, please provide a different location'''
+There is another ship in the way, please provide a different location\n'''
                 return False, coordinates_list, error
 
             # Add ship_section to co-ordinates list
@@ -376,24 +402,30 @@ There is another ship in the way, please provide a different location'''
 
         try:
             if len(user_input) < input_len:
-                print('Input too short, please try again')
+                print('\nInput too short, please try again')
+                sleep(1.1)
                 return False
             if len(user_input) > input_len:
-                print('Input too long, please try again')
+                print('\nInput too long, please try again')
+                sleep(1.1)
                 return False
             if user_input[0] not in valid_row_inputs:
-                print('Invalid co-ordinates, please use only A-E and 0-5')
+                print('\nInvalid co-ordinates, please use only A-E and 0-5')
+                sleep(1.1)
                 return False
             if user_input[1] not in valid_col_inputs:
-                print('Invalid co-ordinates, please use only A-E and 0-5')
+                print('\nInvalid co-ordinates, please use only A-E and 0-5')
+                sleep(1.1)
                 return False
             if phase == 'placing':
                 if user_input[2] not in valid_orientation:
-                    print('Invalid orientation entered, please use H or V')
+                    print('\nInvalid orientation entered, please use H or V')
+                    sleep(1.1)
                     return False
             return True
         except Exception as e:
-            print(f'There was an error with your input: {e}. Please try again')
+            print(f'\nThere was an error with your input: {e}. Please try again')
+            sleep(1.1)
             return False
 
     def fire_shot(self, defending_board):
@@ -411,6 +443,7 @@ There is another ship in the way, please provide a different location'''
 
             if self.validate_coords(shot_coords, 'firing'):
                 if defending_board.update_board_with_shot(shot_coords, self):
+
                     break
                 if self.owner != 'Computer':
                     print('''
@@ -428,18 +461,23 @@ co-ordinates''')
             return False
 
         if self.board_contents[shot_coords] == '+':
-            print(f'''
-{attacking_board.owner} fired at {shot_coords} and got a direct hit on
-{self.owner}!''')
+
+            message = (
+                f'\n{attacking_board.owner} fired at {shot_coords} and got a '
+                f'direct hit on {self.owner}!'
+            )
+            print(message)
             self.board_contents[shot_coords] = '@'
-            sleep(1.5)
+            sleep(1)
             return True
 
-        print(f'''
-{attacking_board.owner} fired at {shot_coords} missed all of
-{self.owner}'s ships!''')
+        message = (
+            f"\n{attacking_board.owner} fired at {shot_coords} and "
+            f"missed all of {self.owner}'s ships!"
+        )
+        print(message)
+        sleep(1)
         self.board_contents[shot_coords] = 'M'
-        sleep(1.5)
         return True
 
     def check_for_win(self, defending_board):
@@ -504,13 +542,15 @@ def main():
 
         while True:
             player_board.fire_shot(comp_board)
-            player_board.print_both_boards(comp_board)
             if player_board.check_for_win(comp_board):
+                win_lose_text('player')
                 break
 
             comp_board.fire_shot(player_board)
+            input('\nPress enter key to continue\n')
             player_board.print_both_boards(comp_board)
             if comp_board.check_for_win(player_board):
+                win_lose_text('computer')
                 break
 
         player_response = play_message('rematch')
