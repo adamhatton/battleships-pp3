@@ -1,17 +1,10 @@
-import os
+'''
+Contains Gameboard class and game functions
+'''
 import sys
 import random
 from time import sleep
-
-print(
-    '''
-  ____       _______ _______ _      ______    _____ _    _ _____ _____   _____
- |  _ \   /\|__   __|__   __| |    |  ____|  / ____| |  | |_   _|  __ \ / ____|
- | |_) | /  \  | |     | |  | |    | |__    | (___ | |__| | | | | |__) | (___
- |  _ < / /\ \ | |     | |  | |    |  __|    \___ \|  __  | | | |  ___/ \___ \\
- | |_) / ____ \| |     | |  | |____| |____   ____) | |  | |_| |_| |     ____) |
- |____/_/    \_\_|     |_|  |______|______| |_____/|_|  |_|_____|_|    |_____/
-''')
+from titles import Headings, clear_console
 
 
 def play_message(game):
@@ -72,7 +65,7 @@ def get_player_name():
     while True:
         try:
             player_name = typed_input('''
-Please enter your name (leave blank to use "Player1"): \n''').strip()
+Please enter your name (leave blank to use "Player 1"): \n''').strip()
             if player_name == '':
                 return 'Player1'
             elif len(player_name) > 18:
@@ -102,93 +95,8 @@ def show_instructions(player_name):
     if player_answer == 'n':
         return
     else:
-        clear_console()
-        print('''
-  _____  _    _ _      ______  _____
- |  __ \| |  | | |    |  ____|/ ____|
- | |__) | |  | | |    | |__  | (___
- |  _  /| |  | | |    |  __|  \___ \\
- | | \ \| |__| | |____| |____ ____) |
- |_|  \_\\_____/|______|______|_____/
-''')
-        print('''This version of battleships is played on a 6x6 board.
-You will be given three ships of the same length to place on your board,
-and your opponenet will do the same with their board. The objective is to sink
-your opponent's ships by supplying the co-ordinates of where you think they
-have placed their ships. The first player to sink all the opponent's ships
-is the winner.
+        Headings.rules()
 
-To keep track of your shots, you will be provided with a 'guess' board.
-The symbols on the board are as follows:
-~ = An untouched section of a board
-+ = An undamaged section of a ship
-@ = A section of a ship which has been hit
-M = A shot which missed''')
-
-        input('\nPress enter key to continue\n')
-        return
-
-
-def game_start_text():
-    clear_console()
-    print('''
-   _____          __  __ ______    _____ _______       _____ _______
-  / ____|   /\   |  \/  |  ____|  / ____|__   __|/\   |  __ \__   __|
- | |  __   /  \  | \  / | |__    | (___    | |  /  \  | |__) | | |
- | | |_ | / /\ \ | |\/| |  __|    \___ \   | | / /\ \ |  _  /  | |
- | |__| |/ ____ \| |  | | |____   ____) |  | |/ ____ \| | \ \  | |
-  \_____/_/    \_\_|  |_|______| |_____/   |_/_/    \_\_|  \_\ |_|
-''')
-
-    input('\nPress enter key to continue\n')
-    return
-
-
-def commence_attack_text():
-    clear_console()
-    print('''
-   _____ ____  __  __ __  __ ______ _   _  _____ ______
-  / ____/ __ \|  \/  |  \/  |  ____| \ | |/ ____|  ____|
- | |   | |  | | \  / | \  / | |__  |  \| | |    | |__
- | |   | |  | | |\/| | |\/| |  __| | . ` | |    |  __|
- | |___| |__| | |  | | |  | | |____| |\  | |____| |____
-  \_____\____/|_|  |_|_|  |_|______|_| \_|\_____|______|
-
-        _______ _______       _____ _  __
-     /\|__   __|__   __|/\   / ____| |/ /
-    /  \  | |     | |  /  \ | |    | ' /
-   / /\ \ | |     | | / /\ \| |    |  <
-  / ____ \| |     | |/ ____ \ |____| . \\
- /_/    \_\_|     |_/_/    \_\_____|_|\_\\
-''')
-    input('\nPress enter key to continue\n')
-    clear_console()
-    return
-
-def win_lose_text(winner):
-    clear_console()
-    if winner == 'player':
-        print('''
- __     ______  _    _  __          _______ _   _
- \ \   / / __ \| |  | | \ \        / /_   _| \ | |
-  \ \_/ / |  | | |  | |  \ \  /\  / /  | | |  \| |
-   \   /| |  | | |  | |   \ \/  \/ /   | | | . ` |
-    | | | |__| | |__| |    \  /\  /   _| |_| |\  |
-    |_|  \____/ \____/      \/  \/   |_____|_| \_|
-''')
-
-    if winner == 'computer':
-        print('''
- __     ______  _    _   _      ____   _____ ______
- \ \   / / __ \| |  | | | |    / __ \ / ____|  ____|
-  \ \_/ / |  | | |  | | | |   | |  | | (___ | |__   
-   \   /| |  | | |  | | | |   | |  | |\___ \|  __|  
-    | | | |__| | |__| | | |___| |__| |____) | |____ 
-    |_|  \____/ \____/  |______\____/|_____/|______|
-''')
-    input('\nPress enter key to continue\n')
-    clear_console()
-    return
 
 class Gameboard:
     '''
@@ -339,7 +247,7 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V''')
 
             # Check if co-ordinates for the ship section exist on the board
             if active_pos_key not in active_board:
-                error = "Not enough space, please provide a different location\n"
+                error = "Not enough space, please enter a different location\n"
                 return False, coordinates_list, error
 
             # Get contents of board space where ship_section is to be placed
@@ -424,7 +332,7 @@ There is another ship in the way, please provide a different location\n'''
                     return False
             return True
         except Exception as e:
-            print(f'\nThere was an error with your input: {e}. Please try again')
+            print(f'\nError with your input: {e}. Please try again')
             sleep(1.1)
             return False
 
@@ -481,6 +389,10 @@ co-ordinates''')
         return True
 
     def check_for_win(self, defending_board):
+        '''
+        Checks for a win by seeing if there are any ship sections left
+        in the defending_board's board_contents
+        '''
         if '+' not in defending_board.board_contents.values():
             print(f'''
 {self.owner} has destroyed all of {defending_board.owner}'s ships!''')
@@ -495,17 +407,11 @@ co-ordinates''')
         self.ships = {'ship 1': [], 'ship 2': [], 'ship 3': []}
 
 
-# Code taken from https://www.delftstack.com/howto/python/python-clear-console/
-def clear_console():
-    command = 'clear'
-    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
-        command = 'cls'
-    os.system(command)
-# End of code taken from delftstack.com
-
-
 # Code taken from https://www.101computing.net/python-typing-text-effect/
 def typed_print(text):
+    '''
+    Prints each character individually to the terminal with a 0.02s delay
+    '''
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
@@ -513,6 +419,10 @@ def typed_print(text):
 
 
 def typed_input(text):
+    '''
+    Prints each character withn a call to input individually to the terminal
+    with a 0.02s delay
+    '''
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
@@ -526,31 +436,32 @@ def main():
     '''
     Runs all the functions for the game
     '''
+    Headings.game_title()
     player_response = play_message('first')
     play_or_quit(player_response)
     player_name = get_player_name()
     show_instructions(player_name)
-    game_start_text()
+    Headings.game_start_text()
     player_board = Gameboard(player_name)
     comp_board = Gameboard('Computer')
 
     while True:
         player_board.create_ships()
         comp_board.create_ships()
-        commence_attack_text()
+        Headings.commence_attack_text()
         player_board.print_both_boards(comp_board)
 
         while True:
             player_board.fire_shot(comp_board)
             if player_board.check_for_win(comp_board):
-                win_lose_text('player')
+                Headings.win_lose_text('player')
                 break
 
             comp_board.fire_shot(player_board)
             input('\nPress enter key to continue\n')
             player_board.print_both_boards(comp_board)
             if comp_board.check_for_win(player_board):
-                win_lose_text('computer')
+                Headings.win_lose_text('computer')
                 break
 
         player_response = play_message('rematch')
