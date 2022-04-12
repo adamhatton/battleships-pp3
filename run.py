@@ -4,7 +4,7 @@ Contains Gameboard class and game functions
 import sys
 import random
 from time import sleep
-from titles import Headings, clear_console
+import titles
 
 
 def play_message(game):
@@ -24,8 +24,8 @@ def play_message(game):
 
     if player_answer == 'y':
         return True
-    else:
-        return False
+
+    return False
 
 
 def validate_input(user_input):
@@ -33,10 +33,9 @@ def validate_input(user_input):
     Validates user input and returns True if it is valid or False if it is not
     '''
     try:
-        if user_input == 'y' or user_input == 'n':
+        if user_input in ('y', 'n'):
             return True
-        else:
-            raise Exception
+        raise Exception
     except Exception:
         typed_print("Input must be 'y' or 'n', please try again\n")
         sleep(1.1)
@@ -51,17 +50,17 @@ def play_or_quit(play_game):
     '''
     if play_game:
         return
-    else:
-        typed_print('''
+
+    typed_print('''
 Closing game. If you change your mind, press the 'Run Program'
 button above to restart the game\n''')
-        sys.exit()
+    sys.exit()
 
 
 def get_player_name():
     '''
-    Get and return user's name, defaulting to 'Player1' if nothing is entered.
-    Function will validate to ensure name is no longer than 40 chars
+    Gets and returns user's name, defaulting to 'Player 1' if nothing is
+    entered. Function will validate to ensure name is no longer than 18 chars
     '''
     while True:
         try:
@@ -82,10 +81,10 @@ shorter''')
 
 def show_instructions(player_name):
     '''
-    Asks user if they want to see the rules and responds based on user input
+    Asks user if they want to see the rules and responds based on input
     '''
     while True:
-        clear_console()
+        titles.clear_console()
         print(f'\nWelcome {player_name}')
         typed_print('Would you like to see the rules?\n')
         player_answer = typed_input('[y] = yes, [n] = no\n').lower()
@@ -95,8 +94,7 @@ def show_instructions(player_name):
 
     if player_answer == 'n':
         return
-    else:
-        Headings.rules()
+    titles.rules()
 
 
 class Gameboard:
@@ -104,11 +102,7 @@ class Gameboard:
     Creates an instance of the Gameboard class which manages the board
     appearance, ship placement and player/computer guesses
     '''
-    wave = '~'
-    ship_section = '+'
-    damaged_ship_section = '@'
-    missed_shot = 'M'
-    row_coords_key = ('a', 'b', 'c', 'd', 'e', 'f')
+    ROW_COORDS_KEY = ('a', 'b', 'c', 'd', 'e', 'f')
 
     def __init__(self, owner):
         self.rows = 6
@@ -133,17 +127,17 @@ class Gameboard:
 
         for row in range(self.rows):
             for col in range(self.cols):
-                coord = f'{Gameboard.row_coords_key[row]}{col}'
-                board_grid.update({coord: Gameboard.wave})
-
+                coord = f'{Gameboard.ROW_COORDS_KEY[row]}{col}'
+                board_grid.update({coord: '~'})
         return board_grid
 
     def print_board(self):
         '''
         Prints the board contents to the terminal in a grid format
         '''
-        # Add column numbers across top of board
+        # Add board owner's name to top of board
         print('{:^26}'.format(f"{self.owner}'s Board"))
+        # Add column numbers across top of board
         print('   0   1   2   3   4   5')
 
         # Adds border to top
@@ -151,9 +145,9 @@ class Gameboard:
 
         # Prints each row starting with the row letter
         for row in range(self.rows):
-            row_to_print = f'{Gameboard.row_coords_key[row]}' + '| '
+            row_to_print = f'{Gameboard.ROW_COORDS_KEY[row]}' + '| '
             for col in range(self.cols):
-                coord = f'{Gameboard.row_coords_key[row]}{col}'
+                coord = f'{Gameboard.ROW_COORDS_KEY[row]}{col}'
                 row_to_print += self.board_contents[coord] + ' | '
             print(row_to_print)
 
@@ -165,7 +159,7 @@ class Gameboard:
         Prints player's board and their guess board to
         the terminal in a grid format
         '''
-        clear_console()
+        titles.clear_console()
         left_number_headings = '  0   1   2   3   4   5'
         right_number_headings = '   0   1   2   3   4   5'
         border = ' -' * 13
@@ -181,10 +175,10 @@ class Gameboard:
 
         # Generates and prints each row by combining info from both boards
         for row in range(self.rows):
-            l_row_to_prt = f'{Gameboard.row_coords_key[row]}' + '| '
-            r_row_to_prt = f'{Gameboard.row_coords_key[row]}' + '| '
+            l_row_to_prt = f'{Gameboard.ROW_COORDS_KEY[row]}' + '| '
+            r_row_to_prt = f'{Gameboard.ROW_COORDS_KEY[row]}' + '| '
             for col in range(self.cols):
-                coord = f'{Gameboard.row_coords_key[row]}{col}'
+                coord = f'{Gameboard.ROW_COORDS_KEY[row]}{col}'
                 l_row_to_prt += self.board_contents[coord] + ' | '
                 if guess_board.board_contents[coord] == '+':
                     r_row_to_prt += '~' + ' | '
@@ -197,15 +191,16 @@ class Gameboard:
 
     def create_ships(self):
         '''
-        Gets user input and if valid uses it to create ships to the
+        Gets user input and if valid uses it to add ships to the
         Gameboard.ships attribute. Calls add_ship_to_board
         to update board contents with ships. For the computer board
         the input is randomly generated.
         '''
         for ship, ship_coords in self.ships.items():
             while True:
-                clear_console()
+                titles.clear_console()
                 ship_len = len(ship_coords)
+                # Get user input
                 if self.owner != 'Computer':
                     self.print_board()
                     typed_print(f'''
@@ -215,11 +210,15 @@ Where would you like to place your {ship.capitalize()}? (Length = {ship_len})
 Enter the starting co-ordinates followed by V for vertical placement (top to
 bottom) or H for horizontal placement (left to right), e.g. A2H or C4V:''')
                     ship_placement = input().lower()
+                # Generate computer input
                 else:
                     ship_placement = self.generate_comp_input('placing')
+                # Validate that input is in correct format
                 if self.validate_coords(ship_placement, 'placing'):
+                    # Validate that ship can be placed at input coords
                     valid_placement, ship_coordinates, error_message =\
                         self.check_ship_placement(ship_len, ship_placement)
+                    # Update Gameboard with the ship
                     if valid_placement:
                         self.ships[ship] = ship_coordinates
                         self.add_ship_to_board(self.ships[ship])
@@ -242,16 +241,18 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V:''')
         ship_row = ship_placement[0]
         # ship_row is a letter, find the index of that letter in the
         # row_coords key so letter can be increased in loops
-        row_letter_index = Gameboard.row_coords_key.index(ship_row)
+        row_letter_index = Gameboard.ROW_COORDS_KEY.index(ship_row)
         # Convert ship col to int to allow iteration through each section
         ship_col = int(ship_placement[1])
         ship_orientation = ship_placement[2]
         active_board = self.board_contents
+        # Create empty list to store ship coords. This is returned so it
+        # can be used to update the Instance's ships attribute
         coordinates_list = []
 
         for ship_section in range(ship_len):
             active_pos_key = (
-                f'{Gameboard.row_coords_key[row_letter_index]}{ship_col}' if
+                f'{Gameboard.ROW_COORDS_KEY[row_letter_index]}{ship_col}' if
                 row_letter_index < 6 else 'blank')
 
             # Check if co-ordinates for the ship section exist on the board
@@ -263,7 +264,7 @@ bottom) or H for horizontal placement (left to right), e.g. A2H or C4V:''')
             active_pos_contents = active_board[active_pos_key]
 
             # Check to make sure contents of the space are a 'wave'
-            if active_pos_contents != Gameboard.wave:
+            if active_pos_contents != '~':
                 error = '''
 There is another ship in the way, please provide a different location\n'''
                 return False, coordinates_list, error
@@ -289,9 +290,9 @@ There is another ship in the way, please provide a different location\n'''
     def generate_comp_input(self, phase):
         '''
         Creates a random input to use for creating
-        the computer's ships
+        the computer's ships based on the phase
         '''
-        row_letter = random.choice(Gameboard.row_coords_key)
+        row_letter = random.choice(Gameboard.ROW_COORDS_KEY)
         col_number = random.randint(0, 5)
         orientation = random.choice(('h', 'v'))
 
@@ -350,14 +351,18 @@ There is another ship in the way, please provide a different location\n'''
         then calls update_board_with_shot for shot feedback
         '''
         while True:
+            # Get user input
             if self.owner != 'Computer':
                 print('Where do you want to fire?')
                 print('Enter the co-ordinates e.g. B4 or E0')
                 shot_coords = input().lower()
+            # Generate Computer input
             else:
                 shot_coords = self.generate_comp_input('firing')
 
+            # Validate that input is in correct format
             if self.validate_coords(shot_coords, 'firing'):
+                # Handle shot
                 if defending_board.update_board_with_shot(shot_coords, self):
                     self.check_destroyed_ship(defending_board)
                     break
@@ -368,7 +373,7 @@ co-ordinates''')
 
     def update_board_with_shot(self, shot_coords, attacking_board):
         '''
-        Takes a shot and updates the board_contents to
+        Takes a shot and updates the instance's board_contents to
         show where a shot has landed. Prints out a message
         to user of where shot landed
         '''
@@ -403,6 +408,7 @@ co-ordinates''')
         gets destroyed.
         '''
         for ship in def_board.ships_status:
+            # Only check active ships to prevent duplication
             if def_board.ships_status[ship] == 'active':
                 coords_to_check = []
                 for sect in def_board.ships[ship]:
@@ -474,32 +480,32 @@ def main():
     '''
     Runs all the functions for the game
     '''
-    Headings.game_title()
+    titles.game_title()
     player_response = play_message('first')
     play_or_quit(player_response)
     player_name = get_player_name()
     show_instructions(player_name)
-    Headings.game_start_text()
+    titles.game_start_text()
     player_board = Gameboard(player_name)
     comp_board = Gameboard('Computer')
 
     while True:
         player_board.create_ships()
         comp_board.create_ships()
-        Headings.commence_attack_text()
+        titles.commence_attack_text()
         player_board.print_both_boards(comp_board)
 
         while True:
             player_board.fire_shot(comp_board)
             if player_board.check_for_win(comp_board):
-                Headings.win_lose_text('player')
+                titles.win_lose_text('player')
                 break
 
             comp_board.fire_shot(player_board)
             input('\nPress enter key to continue\n')
             player_board.print_both_boards(comp_board)
             if comp_board.check_for_win(player_board):
-                Headings.win_lose_text('computer')
+                titles.win_lose_text('computer')
                 break
 
         player_response = play_message('rematch')
