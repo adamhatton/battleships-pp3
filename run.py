@@ -68,13 +68,12 @@ def get_player_name():
 Please enter your name (leave blank to use "Player 1"): \n''').strip()
             if player_name == '':
                 return 'Player 1'
-            elif len(player_name) > 18:
+            if len(player_name) > 18:
                 typed_print('''
 My memory isn't that good, please choose something
 shorter''')
                 continue
-            else:
-                return player_name
+            return player_name
         except Exception:
             typed_print('There was an error with your name, please try again')
 
