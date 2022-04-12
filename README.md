@@ -202,19 +202,19 @@ The Data Model for the game is a single class called Gameboard. This class conta
 - ships_status (whether a ship is active or destroyed)
 
 **Methods**
-- generate_blank_board() - creates a blank board for the instance that ships can be placed on
-- print_board() - prints out the instance's board_contents in a grid format
-- print_both_boards() - prints both attacking and defending boards to the screen
-- create_ships() - takes input and generates a ship at those co-ordinates if input is in valid format
-- check_ship_placement() - checks that there is space for a ship to be placed on the instance's board_contents
-- add_ship_to_board() - changes the instance's board_contents to reflect that there is a ship there
-- generate_comp_input() - generates random input for the computer shot
-- validate_coords() - checks that the input co-ordinates are in valid format and exist on the board
-- fire_shot() - takes input co-ordinates for shot and passes them to other methods
-- update_board_with_shot() - checks whether a shot is a hit or miss and updates the instance's board_contents with the result
-- check_destroyed_ship() - checks to see if a ship has been fully destroyed
-- check_for_win() - checks if the owner has won based on if there are any ships left on the defending board
-- reset_variables() - resets all the instance variables so that game can be restarted
+- **generate_blank_board()** - creates a blank board for the instance that ships can be placed on
+- **print_board()** - prints out the instance's board_contents in a grid format
+- **print_both_boards()** - prints both attacking and defending boards to the screen
+- **create_ships()** - takes input and generates a ship at those co-ordinates if input is in valid format
+- **check_ship_placement()** - checks that there is space for a ship to be placed on the instance's board_contents
+- **add_ship_to_board()** - changes the instance's board_contents to reflect that there is a ship there
+- **generate_comp_input()** - generates random input for the computer shot
+- **validate_coords()** - checks that the input co-ordinates are in valid format and exist on the board
+- **fire_shot()** - takes input co-ordinates for shot and passes them to other methods
+- **update_board_with_shot()** - checks whether a shot is a hit or miss and updates the instance's board_contents with the result
+- **check_destroyed_ship()** - checks to see if a ship has been fully destroyed
+- **check_for_win()** - checks if the owner has won based on if there are any ships left on the defending board
+- **reset_variables()** - resets all the instance variables so that game can be restarted
 
 This class handles the majority of the gameplay, however there are some functions outside the class that handle aspects such as getting the player's name and printing out titles. There is also a main function which calls all the other functions and creates the instances of the Gameboard class.
 
