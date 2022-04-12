@@ -20,7 +20,7 @@ The game is played fully within a mock 'console' that was created by The Code In
 
 ## Live Site
 
-The live site can be found [here](https://dashboard.heroku.com/apps/battleships-by-adh).
+The live site can be found [here](https://battleships-by-adh.herokuapp.com/).
 
 ## Table of Contents
 - [Features](<#features>)
