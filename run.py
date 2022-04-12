@@ -16,7 +16,7 @@ def play_message(game):
         if game == 'first':
             typed_print('Would you like to play a game?\n')
         else:
-            typed_print('Would you like to play again?\n')
+            typed_print('\nWould you like to play again?\n')
         player_answer = typed_input('[y] = yes, [n] = no\n').lower()
 
         if validate_input(player_answer):
@@ -70,8 +70,7 @@ Please enter your name (leave blank to use "Player 1"): \n''').strip()
                 return 'Player 1'
             if len(player_name) > 18:
                 typed_print('''
-My memory isn't that good, please choose something
-shorter''')
+My memory isn't that good, please choose something shorter''')
                 continue
             return player_name
         except Exception:
@@ -352,7 +351,7 @@ There is another ship in the way, please provide a different location\n'''
         while True:
             # Get user input
             if self.owner != 'Computer':
-                print('Where do you want to fire?')
+                print('\nWhere do you want to fire?')
                 print('Enter the co-ordinates e.g. B4 or E0')
                 shot_coords = input().lower()
             # Generate Computer input
@@ -431,7 +430,7 @@ co-ordinates''')
         if '+' not in defending_board.board_contents.values():
             print(f'''
 {self.owner} has destroyed all of {defending_board.owner}'s ships!''')
-            sleep(3)
+            input('\nPress enter key to continue\n')
             return True
         return False
 
@@ -501,11 +500,11 @@ def main():
                 break
 
             comp_board.fire_shot(player_board)
-            input('\nPress enter key to continue\n')
-            player_board.print_both_boards(comp_board)
             if comp_board.check_for_win(player_board):
                 titles.win_lose_text('computer')
                 break
+            input('\nPress enter key to continue\n')
+            player_board.print_both_boards(comp_board)
 
         player_response = play_message('rematch')
         play_or_quit(player_response)
