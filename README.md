@@ -56,7 +56,6 @@ The live site can be found [here](https://battleships-by-adh.herokuapp.com/).
 - [Credits and Resources](<#credits-and-resources>)
 	- [Code](<#code>)
 	- [Content](<#content>)
-	- [Media](<#media>)
 	- [Acknowledgements](<#acknowledgements>)
 
 
@@ -185,37 +184,37 @@ The target audience of the application is people who are looking to play an onli
 
 Before starting the development of the application, I created a process flow of how I anticipated that game would run. This allowed me to visualise the logic and gave me an initial understanding of the different functions that would be required. I referred back to this process flow through development to help keep my focus on the important aspects of the game.
 
-The process flow is a very large image so has been saved separately here: [process flow](docs/flowchart/battleships-flowchart.jpg)
+The process flow is a very large image so has been saved separately here: [process flow](docs/flowchart/battleships-flowchart.png)
 
 ### Data Model
 
 The Data Model for the game is a single class called Gameboard. This class contains the following:
 
 **Class attributes**
-ROW_COORDS_KEY - Used for converting a letter co-ordinate into a number
+- ROW_COORDS_KEY - Used for converting a letter co-ordinate into a number
 
 **Instance Attributes**
-rows (size of the board)
-cols (size of the board)
-board_contents (what is contained in each section of the board)
-owner (who owns the board)
-ships (the names and co-ordinates of each ship_
-ships_status (whether a ship is active or destroyed)
+- rows (size of the board)
+- cols (size of the board)
+- board_contents (what is contained in each section of the board)
+- owner (who owns the board)
+- ships (the names and co-ordinates of each ship_
+- ships_status (whether a ship is active or destroyed)
 
 **Methods**
-generate_blank_board() - creates a blank board for the instance that ships can be placed on
-print_board() - prints out the instance's board_contents in a grid format
-print_both_boards() - prints both attacking and defending boards to the screen
-create_ships() - takes input and generates a ship at those co-ordinates if input is in valid format
-check_ship_placement() - checks that there is space for a ship to be placed on the instance's board_contents
-add_ship_to_board() - changes the instance's board_contents to reflect that there is a ship there
-generate_comp_input() - generates random input for the computer shot
-validate_coords() - checks that the input co-ordinates are in valid format and exist on the board
-fire_shot() - takes input co-ordinates for shot and passes them to other methods
-update_board_with_shot() - checks whether a shot is a hit or miss and updates the instance's board_contents with the result
-check_destroyed_ship() - checks to see if a ship has been fully destroyed
-check_for_win() - checks if the owner has won based on if there are any ships left on the defending board
-reset_variables() - resets all the instance variables so that game can be restarted
+- generate_blank_board() - creates a blank board for the instance that ships can be placed on
+- print_board() - prints out the instance's board_contents in a grid format
+- print_both_boards() - prints both attacking and defending boards to the screen
+- create_ships() - takes input and generates a ship at those co-ordinates if input is in valid format
+- check_ship_placement() - checks that there is space for a ship to be placed on the instance's board_contents
+- add_ship_to_board() - changes the instance's board_contents to reflect that there is a ship there
+- generate_comp_input() - generates random input for the computer shot
+- validate_coords() - checks that the input co-ordinates are in valid format and exist on the board
+- fire_shot() - takes input co-ordinates for shot and passes them to other methods
+- update_board_with_shot() - checks whether a shot is a hit or miss and updates the instance's board_contents with the result
+- check_destroyed_ship() - checks to see if a ship has been fully destroyed
+- check_for_win() - checks if the owner has won based on if there are any ships left on the defending board
+- reset_variables() - resets all the instance variables so that game can be restarted
 
 This class handles the majority of the gameplay, however there are some functions outside the class that handle aspects such as getting the player's name and printing out titles. There is also a main function which calls all the other functions and creates the instances of the Gameboard class.
 
@@ -258,7 +257,7 @@ This class handles the majority of the gameplay, however there are some function
 - For users that don't want to read the rules, each request for input is coupled with an explanation of what is expected see ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
 
 **As a user I want to avoid having to read lots of text**
-- All requests for input are as short as possible and provide a concise explanation of what is expected see ([landing screen](<#landing-screen>)), ([enter name](<#enter-name>)), ([rules screen](<#rules-screen>)), ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
+- All requests for input are as short as possible and provide a concise explanation of what is expected see ([landing screen](<#landing-screen>)), ([enter name](<#enter-name>)), ([welcome screen](<#welcome-screen>)), ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
 - The user is not forced to read the Rules, which contains the most amount of text of any screen in the game
 - The feedback on shots is short and concise ([see fire screen](<#fire-screen>))
 
@@ -374,7 +373,7 @@ To deploy the live site, the following steps were taken:
  
 12.	From the ‘Deployment Method’ section, select ‘GitHub’:
 
-![deployment method screenshot](docs/screenshots/deploy-method.jpg)
+![deployment method screenshot](docs/screenshots/deployment-method.jpg)
  
 13.	Allow Heroku to connect to GitHub by selecting ‘Connect to GitHub’
 14.	Search for the repository by entering the name of the GitHub repository to deploy and selecting search:
@@ -414,8 +413,8 @@ To fork the repository, please follow the below steps:
 ### Code
 
 - When trying to find out how to exit the game, I learned about sys.exit() from [this YouTube tutorial](https://www.youtube.com/watch?v=qpMOB_sevkE) by "Reuven Lerner"
-- To learn how to get random elements out of a tuple using random.choice(), I used [this article](https://www.codespeedy.com/select-a-random-element-from-a-tuple-in-python/)
-- I learned how about the .format() method and how to use this to space things out in the console evenly I used [this Stack Overflow](https://stackoverflow.com/questions/11245381/formatting-console-output) and [this website](https://pyformat.info/)
+- To learn how to get random elements out of a tuple using random.choice(), I used [this article](https://www.codespeedy.com/select-a-random-element-from-a-tuple-in-python/) by CodeSpeedy
+- I learned about the .format() method and how to use this to space things out in the console evenly from [this Stack Overflow post](https://stackoverflow.com/questions/11245381/formatting-console-output) and [the pyformat website](https://pyformat.info/)
 - The way to split up long f-strings was learned from [this Stack Overflow post](https://stackoverflow.com/questions/48881196/how-to-split-up-a-long-f-string-in-python) (specifically from user 'juanpa.arrivillaga'
 - The clear_console() function was taken directly from [this tutorial on DelftStack](https://www.delftstack.com/howto/python/python-clear-console/)
 - The functions for creating the "typing" effect on the output were taken directly from [this article on 101 Computing](https://www.101computing.net/python-typing-text-effect/)
