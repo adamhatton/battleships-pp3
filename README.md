@@ -182,7 +182,7 @@ The target audience of the application is people who are looking to play an onli
 
 ### Logic Flow
 
-Before starting the development of the application, I created a process flow of how I anticipated that game would run. This allowed me to visualise the logic and gave me an initial understanding of the different functions that would be required. I referred back to this process flow through development to help keep my focus on the important aspects of the game.
+Before starting the development of the application, I created a process flow of how I anticipated the game would run. This allowed me to visualise the logic and gave me an initial understanding of the different functions that would be required. I referred back to this process flow through development to help keep my focus on the important aspects of the game.
 
 The process flow is a very large image so has been saved separately here: [process flow](docs/flowchart/battleships-flowchart.png)
 
@@ -198,7 +198,7 @@ The Data Model for the game is a single class called Gameboard. This class conta
 - cols (size of the board)
 - board_contents (what is contained in each section of the board)
 - owner (who owns the board)
-- ships (the names and co-ordinates of each ship_
+- ships (the names and co-ordinates of each ship)
 - ships_status (whether a ship is active or destroyed)
 
 **Methods**
@@ -248,16 +248,16 @@ This class handles the majority of the gameplay, however there are some function
 ### User Stories Testing
 
 **As a user I want to play an online version of Battleships**
-- On the landing screen, the users is presented with a large 'Battleships' title, making it immediately clear to the user what game they are about to play ([see landing screen](<#landing-screen>))
+- On the landing screen, the user is presented with a large 'Battleships' title, making it immediately clear to the user what game they are about to play ([see landing screen](<#landing-screen>))
 - The user is explicitly asked if they would like to play a game ([see landing screen](<#landing-screen>)) 
 - As this user story is quite general, the requirements are met through various other stories (i.e. being able to place ships, being able to keep track of shots etc)
 
 **As a user I want to easily understand how to play the game**
 - The user is asked if they would like to see the rules. If they select 'y', this shows a single screen of text with some concise rules on how to play the game ([see rules screen](<#rules-screen>))
-- For users that don't want to read the rules, each request for input is coupled with an explanation of what is expected see ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
+- For users that don't want to read the rules, each request for input is coupled with an explanation of what is expected, see ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
 
 **As a user I want to avoid having to read lots of text**
-- All requests for input are as short as possible and provide a concise explanation of what is expected see ([landing screen](<#landing-screen>)), ([enter name](<#enter-name>)), ([welcome screen](<#welcome-screen>)), ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
+- All requests for input are as short as possible and provide a concise explanation of what is expected, see ([landing screen](<#landing-screen>)), ([enter name](<#enter-name>)), ([welcome screen](<#welcome-screen>)), ([placing ships](<#placing-ships>)) and ([fire screen](<#fire-screen>))
 - The user is not forced to read the Rules, which contains the most amount of text of any screen in the game
 - The feedback on shots is short and concise ([see fire screen](<#fire-screen>))
 
@@ -327,7 +327,7 @@ In order to fix this, I used the .strip() method on the input to remove whitespa
             player_name = typed_input('''
 Please enter your name (leave blank to use "Player 1"): \n''').strip()
 ~~~
-After restesting, this prevented stopped the bug from occurring.
+After restesting, this stopped the bug from occurring.
 
 ## Deployment
 
